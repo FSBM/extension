@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #76ADFF;
+  --primary-green: #DAEF68;
+  --primary-yellow: #FFCE00;
+  --primary-orange: #FF8E59;
+  --primary-white: #FFFFFF;
+
+  --soft-blue: #A3C8FF;
+  --deep-blue: #4A90E2;
+  --light-green: #B4E4A3;
+  --dark-green: #4C9C31;
+  --warm-yellow: #F7D700;
+  --light-orange: #FFB380;
+  --dark-orange: #F07A35;
+  --soft-pink: #F8B6D3;
+  --bright-purple: #9B59B6;
+  --muted-teal: #4FB5B5;
+  --light-gray: #E1E1E1;
+  --dark-gray: #707070;
+  --rich-burgundy: #9B1A1B;
+  --earthy-brown: #8D6E63;
+  --pastel-purple: #D1A6F0;
+  --peach-pink: #FFABAB;
+  --soft-lavender: #C1A2D2;
+  --ocean-blue: #2C3E50;
+}
+
+
+body{
+  background: transparent;
+}
+body ::placeholder{
+  background-color: transparent !important;
+}
+
+
+@font-face {
+  font-family: 'Sans-Mono-400';
+  src: url('./assets/Google Sans Mono-normal-400-100.ttf');
+
+}
+@font-face {
+  font-family: 'Sans-Mono-300';
+  src: url('./assets/Google Sans Mono-normal-300-100.ttf');
+
+}
+@font-face {
+  font-family: 'Sans-Mono-500';
+  src: url('./assets/Google Sans Mono-normal-500-100.ttf');
+}
+@font-face {
+  font-family: 'Sans-Mono-700';
+  src: url('./assets/Google Sans Mono-normal-700-100.ttf');
+}
+@font-face {
+  font-family: 'Sans-Text-400';
+  src: url('./assets/Google Sans Text-normal-400-100.ttf');
+}
+@font-face {
+  font-family: 'Sans-Text-700';
+  src: url('./assets/Google Sans Text-normal-700-100.ttf');
+  
+}
+
+
+.nanum-myeongjo-regular {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.nyr {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.nanum-myeongjo-bold {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.nanum-myeongjo-extrabold {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.inter-400{
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.inter-500{
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.inter-600{
+  font-family: "Inter", serif;
+  font-optical-sizing:auto;
+  font-weight: 600;
+  font-style: normal;
+}
+.inter-700{
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.noto-sans-mono-400 {
+  font-family: "Noto Sans Mono", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+.noto-sans-mono-500 {
+  font-family: "Noto Sans Mono", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+.noto-sans-mono-600 {
+  font-family: "Noto Sans Mono", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+

@@ -1,0 +1,39 @@
+#my-extension-sidebar {
+  position: fixed;
+  top: 20%;
+  right: 20px;
+  width: 420px;
+  height: 500px;
+  border-radius: 8px;
+  background: transparent !important;
+  z-index: 99999999;
+  transition: transform 0.3s ease-in-out;
+  border-left: transparent !important;
+  overflow: hidden !important;
+  animation: slideIn 0.3s ease-in-out forwards;
+
+}
+
+#my-extension-sidebar {
+transform: translateX(100%);
+}
+
+@keyframes slideIn {
+from {
+  transform: translateX(100%);
+}
+to {
+  transform: translateX(0);
+}
+}
+
+@keyframes slideOut {
+from {
+  transform: translateX(0);
+}
+to {
+  transform: translateX(100%);
+}
+}
+
+
