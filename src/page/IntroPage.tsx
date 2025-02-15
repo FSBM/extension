@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom';
 const Intro = () => {
     const Navigate = useNavigate();
   return (
-    <div className="h-[500px] w-[420px] relative border border-black">
+    <div className="h-[500px] w-[415px] relative border border-black rounded-lg overflow-hidden">
+      
       <div className="absolute inset-0 flex">
         <div className="w-1/4 bg-[var(--primary-orange)]" />
         <div className="w-1/4 bg-[var(--primary-green)]" />
@@ -16,7 +17,7 @@ const Intro = () => {
       </div>
 
       {/* Content */}
-      <div className="relative h-[500px] w-[450px]  flex my-auto justify-center">
+      <div className="relative h-[500px] w-[419px]  flex my-auto justify-center rounded-lg">
         <div className="flex flex-col items-center text-center space-y-8 p-8">
 
           <div className="flex items-center mb-16">

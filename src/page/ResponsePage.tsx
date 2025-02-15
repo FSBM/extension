@@ -12,8 +12,8 @@ interface FormData {
 
 export default function ResponsePage() {
     
-    const [title,setTitle] = useState("Title");
-    const [subTxt,setSubTxt] = useState("Subtitle");
+    const [title,setTitle] = useState("Good Morning");
+    const [subTxt,setSubTxt] = useState("Welcome User...");
     const[leftBtnTxt,setLftBtnTxt] = useState("CLEAR");
     const [BtnTxtClr,setBtnTxtClr] = useState("--primary-yellow");
     const[rightBtnTxt,setRtBtnTxt] = useState("SUBMIT");
@@ -54,29 +54,30 @@ export default function ResponsePage() {
 
       if(formData.link=="" || formData.title==""){
         setnotSubmitted(true);
-        setisError("Please fill the title and link feild ")
+        setisError("Link or Title missing!")
         return
       }
-      else{}
+      else{
       setisError('')
-
+      setnotSubmitted(false);
       let response = Math.random() > 0.5?true:false;
 
       if(response){
         setbgClr("--primary-green")
-        setTitle("Success")
+        setTitle("Successful !")
         setSubTxt("Your entry has been saved.")
         setLftBtnTxt("BACK")
         setBtnTxtClr("--primary-green")
         setRtBtnTxt("HOME")
       }else{
         setbgClr("--primary-orange")
-        setTitle("Error")
+        setTitle("Error !")
         setSubTxt("Something went wrong")
         setLftBtnTxt("BACK")
         setBtnTxtClr("--primary-orange")
         setRtBtnTxt("RETRY :)")
       }
+    }
 
 
   }

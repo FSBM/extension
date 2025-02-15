@@ -10,9 +10,9 @@ import ResponsePage from "./page/ResponsePage";
 import './index.css';
 
 const pageVariants = {
-  initial: { opacity: 0, y: 0 },  
+  initial: { opacity: 1, y: 0 },  
   animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },  
-  exit: { opacity: 0, y: 0, transition: { duration: 0.2 } }  
+  exit: { opacity: 1, y: 0, transition: { duration: 0.2 } }  
 };
 
 import { ReactNode } from "react";
