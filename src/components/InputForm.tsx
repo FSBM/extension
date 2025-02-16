@@ -66,7 +66,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
                         <p className="text-red-500 font-SansMono400 text-sm text-center pb-0">{Error}</p>
                       </div>:null}
             
-                      <div className={`flex justify-between ${Error?"pt-0":"pt-10"}`}>
+                      <div className={`flex ${showOnlyOne?'justify-center':'justify-between'} mx-auto ${Error?"pt-0":"pt-10"}`}>
                       <Button handle={handleClear} text={leftBtnTxt} textColor={BtnTxtClr} />
                       {showOnlyOne?null:<Button handle={handleSubmit} text={rightBtnTxt} textColor={BtnTxtClr} />}
                       </div>

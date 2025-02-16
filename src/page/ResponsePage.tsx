@@ -20,6 +20,7 @@ export default function ResponsePage() {
     const [notSubmitted, setnotSubmitted] = useState(true);
     const [bgClr, setbgClr] = useState("--primary-yellow");
     const [isError,setisError] = useState('');
+    const [showOnlyOne, setShowOnlyOne] = useState(false);
 
     const Navigate = useNavigate();
 
@@ -69,6 +70,7 @@ export default function ResponsePage() {
         setLftBtnTxt("BACK")
         setBtnTxtClr("--primary-green")
         setRtBtnTxt("HOME")
+        setShowOnlyOne(true)
       }else{
         setbgClr("--primary-orange")
         setTitle("Error !")
@@ -125,6 +127,7 @@ export default function ResponsePage() {
           leftBtnTxt={leftBtnTxt}
           rightBtnTxt={rightBtnTxt}
           Error={isError}
+          showOnlyOne={showOnlyOne}
         />
       </div>
     </>
