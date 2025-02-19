@@ -37,7 +37,9 @@ export default function ResponsePage() {
       setFormData({...formData, link: tabs[0].url || ''})
     })
   }
-  getLink();
+  if(formData.link===""){
+    getLink;
+  }
 
 
 

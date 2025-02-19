@@ -26,15 +26,15 @@ export default function SubmitPage() {
     note: ''
   });
 
-  const getLink = ()=>{
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      console.log(tabs[0].url);
-      if(!tabs[0].url){
-        setFormData({...formData,link:""})
-      } else setFormData({...formData, link: tabs[0].url || ''})
-    })
-  }
-  getLink();
+  // const getLink = ()=>{
+  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  //     console.log(tabs[0].url);
+  //     if(!tabs[0].url){
+  //       setFormData({...formData,link:""})
+  //     } else setFormData({...formData, link: tabs[0].url || ''})
+  //   })
+  // }
+  // getLink();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

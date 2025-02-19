@@ -1,21 +1,30 @@
 {
-    "manifest_version": 3,
-    "name": "My App",
-    "version": "1.0",
-    "description": "A brief description of my app",
-    "permissions": ["scripting", "activeTab","tabs","bookmarks"],
-    "host_permissions": ["<all_urls>"],
-    "web_accessible_resources": [
-      {
-        "resources": ["index.html"],
-        "matches": ["<all_urls>"]
-      }
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_title": "Toggle Sidebar"
+  "manifest_version": 3,
+  "name": "My App",
+  "version": "1.0",
+  "description": "A brief description of my app",
+  "permissions": [
+      "scripting", 
+      "activeTab",
+      "tabs",
+      "bookmarks",
+      "cookies",
+      "storage"
+  ],
+  "host_permissions": [
+      "http://localhost:5173/*",
+      "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html"],
+      "matches": ["<all_urls>"]
     }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Toggle Sidebar"
   }
-  
+}
