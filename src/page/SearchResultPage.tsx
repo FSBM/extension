@@ -1,125 +1,179 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Cards from '../components/Cards';
 import Button from '../components/Button';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import '../index.css';
+
+interface ProcessedResult {
+  title: string;
+  url: string;
+  content: string;
+}
 
 const SearchResponse: React.FC = () => {
-    const colors = [
-        '--primary-blue', '--primary-green', '--primary-yellow', '--primary-orange',
-        '--soft-blue', '--deep-blue', '--light-green', '--dark-green', '--warm-yellow',
-        '--light-orange', '--dark-orange', '--soft-pink', '--bright-purple', '--muted-teal',
-        '--light-gray', '--dark-gray', '--rich-burgundy', '--earthy-brown', '--pastel-purple',
-        '--peach-pink', '--soft-lavender', '--ocean-blue'
-      ];
+  const location = useLocation();
+  const responseData = location.state?.data as ProcessedResult[] || [];
+  const colors = [
+    'bg-custom-orange',
+    'bg-custom-light-violet',
+    'bg-custom-lime',
+    'bg-custom-hot-pink',
     
-      let randomColor = () => colors[Math.floor(Math.random() * colors.length)];
+    'bg-custom-electric-blue',
+    'bg-custom-marigold',
+    'bg-custom-bright-purple',
+    'bg-custom-neon-green',
+    
+    'bg-custom-bright-orange',
+    'bg-custom-vivid-blue',
+    'bg-custom-lime-yellow',
+    'bg-custom-violet',
+    
+    'bg-custom-chartreuse',
+    'bg-custom-light-pink',
+    'bg-custom-electric-lime',
+    'bg-custom-blue',
+    
+    'bg-custom-brownish-orange',
+    'bg-custom-green',
+    'bg-custom-bright-yellow',
+    'bg-custom-yellow'
+  ];
 
-    const [Card,setCards] = useState([
-        {
-          key:1,  
-          title: "Constructive and destructive",
-          fullDescription: "Detailed explanation about wave types, bla bla bla",
-          bgColor: "bg-[#ffc1c1]"
-        },
-        {
-          key:2,
-          title: "Tailwind and react",
-          fullDescription: "Detailed description about React and react",
-          bgColor: "bg-[#89cff0]"
-        },
-        {
-          key:3,  
-          title: "Constructive and destructive waves",
-          fullDescription: "Detailed explanation about wave types",
-          bgColor: "bg-[#bff566]"
-        },
-      ]);
-      const allBookmarks: string[] = [];
+  const currentIndex = useRef(0);
+  const getNextColor = () => {
+    const color = colors[currentIndex.current];
+    currentIndex.current = (currentIndex.current + 1) % colors.length;
+    return color;
+  };
 
-      useEffect(() => {
-        const getAllBookmarks = () => {
-            if (!chrome.bookmarks) {
-                console.error("chrome.bookmarks API is not available.");
-                return;
-            }
+  interface CardType {
+    key: number;
+    title: string;
+    fullDescription: string;
+    bgColor: string;
+    RedirectUrl: string;
+  }
+  
+  const [Card, setCards] = useState<CardType[]>([]);
+  const allBookmarks: string[] = [];
 
-            chrome.bookmarks.getTree((bookmarkTreeNodes) => {
-                const allBookmarks: string[] = [];
-                
-                const extractBookmarks = (nodes: chrome.bookmarks.BookmarkTreeNode[]) => {
-                    for (const node of nodes) {
-                        if (node.url) allBookmarks.push(node.url);
-                        if (node.children) extractBookmarks(node.children);
-                    }
-                };
+  useEffect(() => {
+    const getAllBookmarks = () => {
+      if (!chrome.bookmarks) {
+        console.error("chrome.bookmarks API is not available.");
+        return;
+      }
 
-                extractBookmarks(bookmarkTreeNodes);
-                
-                const newCards = allBookmarks.map((url, index) => ({
-                    key: Card.length + index + 1,
-                    title: "No Title",
-                    fullDescription: url,
-                    bgColor: randomColor()
-                }));
+      // chrome.bookmarks.getTree((bookmarkTreeNodes) => {
+      //     const allBookmarks: Array<{ url: string, title: string }> = [];
 
-                setCards(prev => [...prev, ...newCards]);
-            });
-        };
+      //     const extractBookmarks = (nodes: chrome.bookmarks.BookmarkTreeNode[]) => {
+      //         for (const node of nodes) {
+      //             if (node.url) {
+      //                 const url = node.url;
+      //                 allBookmarks.push({
+      //                     url: node.url,
+      //                     title: node.title || url.split("/").pop() || url 
+      //                 });
+      //             }
+      //             if (node.children) extractBookmarks(node.children);
+      //         }
+      //     };
 
-        getAllBookmarks();
-    }, allBookmarks); 
+      //     extractBookmarks(bookmarkTreeNodes);
+
+      //     const newCards = allBookmarks.map((item, index) => ({
+      //         key: Card.length + index + 1,
+      //         title: item.title, 
+      //         fullDescription: item.url,
+      //         bgColor: randomColor()
+      //     }));
+
+      //     setCards(prev => [...prev, ...newCards]);
 
 
-    const Navigate = useNavigate();
+      // });
+
+      if (responseData) {
+        if(responseData.length===0){
+          console.log("No documents found matching query");
+          return;
+        }
+        console.log("this is the response data after searching :" + responseData);
+        const newCards = responseData.map((item: any, index: number) => ({
+          key: Card.length + index + 1,
+          title: item.title,
+          fullDescription: (item.content===""?"No Description":item.content),
+          bgColor: getNextColor(),
+          RedirectUrl: item.url
+        }));
+        setCards(newCards);
+      }
+
+    };
+
+    getAllBookmarks();
+  }, allBookmarks);
+
+
+  const Navigate = useNavigate();
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  
-  
+
+
 
   return (
-    <div className="relative max-w-md bg-[var(--primary-white)] rounded-lg w-[420px] h-[500px] flex flex-col justify-center border border-black py-0 overflow-hidden">
-      <div className={` 
+    <div
+
+    style={{backgroundColor: responseData.length === 0 ? 'var(--primary-red)' : 'var(--primary-white)'}}
+
+    className={`relative max-w-md  rounded-lg w-[420px] h-[500px] flex flex-col justify-center border border-black py-0 overflow-hidden`}>
+      {responseData.length === 0 ? (
+        <p className='text-center text-3xl black mb-3 pb-7 nyr-semibold'>Oops ! No results found</p>
+      ):(<div className={` 
         
-        ${selectedIndex === null 
+        ${selectedIndex === null
           ? 'overflow-y-scroll py-3 pb-24 px-3 '
           : 'overflow-y-scroll py-0 px-0 cursor-default'}
-        
         [&::-webkit-scrollbar]:hidden w-[100%] h-[100%]`}>
-        {selectedIndex === null 
+        {selectedIndex === null
           ? Card.map((card, index) => (
-              <Cards
-                key={index}
-                title={card.title}
-                description={card.fullDescription.split(" ").splice(0,7).join(" ")+"..."}
-                bgColor={card.bgColor}
-                onClick={() => setSelectedIndex(index)}
-                isSelected={false}
-              />
-            ))
+            <Cards
+              key={index}
+              title={card.title}
+              description={card.fullDescription.slice(0, 15) + "..."}
+              bgColor={card.bgColor}
+              onClick={() => setSelectedIndex(index)}
+              isSelected={false}
+              RedirectUrl={card.RedirectUrl}
+            />
+          ))
           : (
-              <Cards
-                title={Card[selectedIndex].title}
-                description={Card[selectedIndex].fullDescription}
-                bgColor={Card[selectedIndex].bgColor}
-                onClick={() => null}
-                isSelected={true}
-              />
-            )}
-      </div>
-      
+            <Cards
+              title={Card[selectedIndex].title}
+              description={Card[selectedIndex].fullDescription}
+              bgColor={Card[selectedIndex].bgColor}
+              onClick={() => null}
+              isSelected={true}
+              RedirectUrl={Card[selectedIndex].RedirectUrl}
+            />
+          )}
+      </div>)}
+
       <div className="absolute bottom-0 rounded-b-lg w-full min-h-[90px] flex items-center justify-between px-10 bg-white border-t border-black">
-        <Button 
-          text='BACK' 
+        <Button
+          text='BACK'
           handle={() => {
-            if(selectedIndex === null) Navigate("/search");
+            if (selectedIndex === null) Navigate("/search");
             else setSelectedIndex(null);
-          }} 
-          textColor='--primary-white' 
+          }}
+          textColor='--primary-white'
         />
-        <Button 
-          text='HOME' 
-          handle={() => Navigate("/") } 
-          textColor='--primary-white' 
+        <Button
+          text='HOME'
+          handle={() => Navigate("/")}
+          textColor='--primary-white'
         />
       </div>
     </div>

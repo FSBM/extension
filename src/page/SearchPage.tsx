@@ -1,9 +1,53 @@
 import { BiSearchAlt2 } from "react-icons/bi"
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-export default function SearchPage() {
+
+interface Props {
+    Quote: string;
+}
+
+
+
+export default function SearchPage({ Quote }: Props) {
     const Navigate = useNavigate();
+    const [query, setQuery] = useState<string>("");
+
+    const handleSearch = () => {
+        chrome.runtime.sendMessage({ action: "search", query: query, cookies: localStorage.getItem("access_token") },
+            (response) => {
+                console.log(response);
+                if (response) {
+                    console.log("API Response of query:", JSON.stringify(response.data));
+                    if(response.data.detail==="Search failed: No documents found matching query"){
+                        console.log("No documents found matching query");
+                        Navigate("/response", { state: { data: [] } });
+                        return;
+                    }else{
+                    const responseArray = response.data.map((item: any) => ({
+                        title: item.metadata.title,
+                        url: item.metadata.source_url,
+                        content: item.metadata.note,
+                    }));
+                    console.log("Response Array this given as: ", responseArray);
+                    Navigate("/response", { state: { data: responseArray } });
+                }
+
+                    
+                } else {
+                    console.error("API Error:", response.error);
+                }
+            }
+        )
+
+    };
+
+
+
+
+    console.log(Quote);
     return (
         <>
             <div className="max-w-md bg-white rounded-lg px-10 w-[420px] h-[500px] flex flex-col  justify-between py-10 border border-black">
@@ -12,9 +56,11 @@ export default function SearchPage() {
                     <input
                         type="text"
                         placeholder="SEARCH"
-                        onKeyDown={(e)=>{
-                            if(e.key === "Enter"){
-                                Navigate("/response")
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleSearch();
                             }
                         }}
                         className="bg-transparent focus:outline-none text-black placeholder:text-[11px] placeholder:text-black w-[80%]
@@ -24,10 +70,15 @@ export default function SearchPage() {
                     <BiSearchAlt2 size={24} />
                 </div>
                 <div className="nanum-myeongjo-regular text-4xl text-center">
-                    <h1>“Every bookmark is a doorway to a new journey”</h1>
+                    <motion.h1
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1.5 }}
+                        className="text-center"
+                    >"{Quote}"</motion.h1>
                 </div>
                 <div className="w-[100px] mx-auto">
-                    <Button text="HOME" handle={() => { console.log("search"), Navigate("/")  }} textColor="--primary-white"/>
+                    <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />
                 </div>
             </div>
         </>

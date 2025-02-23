@@ -4,9 +4,10 @@ interface Props {
     handle: () => void;
     text: string;
     textColor: string; 
+    iSdisabled ?: boolean;
   }
   
-  export default function Button({ handle, text, textColor }: Props) {
+  export default function Button({ handle, text, textColor, iSdisabled }: Props) {
 
     return (
       <button
@@ -18,6 +19,7 @@ interface Props {
                     inter-500 text-xs border border-black tracking-wider`}
         onMouseEnter={(e) => (e.currentTarget.style.color = "black")}
         onMouseLeave={(e) => (e.currentTarget.style.color = `var(${textColor})`)}
+        disabled={iSdisabled}
       >
         {text}
       </button>

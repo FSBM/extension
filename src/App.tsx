@@ -15,7 +15,11 @@ const pageVariants = {
   exit: { opacity: 1, y: 0, transition: { duration: 0.2 } }  
 };
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
+
+
+
+
 
 const PageWrapper = ({ children }: { children: ReactNode }) => (
   <motion.div
@@ -29,72 +33,127 @@ const PageWrapper = ({ children }: { children: ReactNode }) => (
   </motion.div>
 );
 
+
+
 const AnimatedRoutes = () => {
   const Navigate = useNavigate();
   const location = useLocation();
+  const [quotes, setQuotes] = useState<string[]>([]);
+
+  function checkForCookie() {
+    chrome.cookies.getAll({url: "https://extension-auth.vercel.app"},(cookies) => {
+      const accessToken = cookies.find((cookie) => cookie.name === "access_token")?.value;
+      
+      if (accessToken && location.pathname === "/") {
+        Navigate("/submit");
+        localStorage.setItem("access_token", accessToken);
+      } else {
+        setTimeout(checkForCookie, 1000);
+      }
+    });
+  }
+  
+  checkForCookie();
 
   useEffect(() => {
-    // Check if access_token is already in localStorage
-    const accessToken = localStorage.getItem("access_token");
-    document.cookie = `access_token=${accessToken}; path=/; domain=localhost; SameSite=Lax`
+    const handleAuthFlow = async () => {
+      
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-    // const [quotes, setQuotes] = useState([]);
+      if (!tab?.url) return;
 
-    const fetchData = async () => {
-      const res = await fetch("https://magical-famous-emu.ngrok-free.app/quotes");
-      console.log(res);
-    }
-    fetchData();
+      
 
+      try {
+        const url = new URL(tab.url);
+        const accessToken = localStorage.getItem("access_token");
 
+      
+        if (accessToken) {
+          await chrome.cookies.set({
+            url: import.meta.env.VITE_API_URL,
+            name: 'access_token',
+            value: accessToken,
+            path: '/',
+            domain: new URL(import.meta.env.VITE_API_URL).hostname
+          });
+          
+          console.log("Cookie successfully set for domain:", new URL(import.meta.env.VITE_API_URL).hostname);
+          await chrome.cookies.set({
+            url: tab.url,
+            name: 'access_token',
+            value: accessToken,
+            path: '/',
+            domain: url.hostname
+          });
+          
+          const cookie = await chrome.cookies.get({
+            url: tab.url,
+            name: 'access_token',
+          });
+          
 
-
-    if (accessToken) {
-      document.cookie = `access_token=${accessToken}; path=/; domain=localhost; SameSite=Lax`
-      Navigate("/submit");
-      console.log("Access token found in localStorage: " + accessToken);
-      chrome.cookies.getAll({}, (cookies) => {
-        cookies.forEach((cookie) => {
-          if (cookie.name === "refresh_token") {
-            localStorage.setItem("refresh_token", cookie.value);
+          if (cookie && location.pathname === "/") {
+            Navigate("/submit");
+            
+            console.log("the cookie is set in state and the value is", cookie.value);
+            console.log("Cookie successfully set for domain:", url.hostname);
+            
           }
-        });
-      })
-      
-      
-    }
-
-    const handleCookieChange = (changeInfo: any) => {
-      
-      if (changeInfo.cookie.name === "access_token") {
-        if (changeInfo.cookie.value) {
-          localStorage.setItem("access_token", changeInfo.cookie.value);
-          Navigate("/submit");
-          console.log("Got the updated access_token: " + changeInfo.cookie.value);
-        } else {
-          console.log("access_token has been removed");
         }
+      } catch (error) {
+        console.error("Error handling auth flow:", error);
+        
       }
-    };
 
-    if(!accessToken){
-      chrome.cookies.onChanged.addListener(handleCookieChange);
+      
+chrome.runtime.sendMessage(
+  {
+    cookies: localStorage.getItem("access_token"),
+    action: "getQuotes"  
+  },
+  (response) => {
+    if (response.success) {
+      console.log("API Response:", response.data);
+      
+      if (response.data) {
+        const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
+        setQuotes(prev => [
+          ...new Set([...prev, ...filteredQuotes]) 
+        ]);
+      }
+      
+      console.log("Quotes update triggered");
+    } else {
+      console.error("API Error:", response.error);
     }
+  }
+);
+    };
 
-    // Clean up the listener when component is unmounted
-    return () => {
-      if(!accessToken){
-        chrome.cookies.onChanged.removeListener(handleCookieChange);
+    handleAuthFlow();
+
+    const handleCookieChange = (changeInfo: chrome.cookies.CookieChangeInfo) => {
+      if (changeInfo.cookie.name === "access_token") {
       }
     };
-  },[]);
+
+    chrome.cookies.onChanged.addListener(handleCookieChange);
+    return () => chrome.cookies.onChanged.removeListener(handleCookieChange);
+  }, []);
+
+
+
+
+
+
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><Intro /></PageWrapper>} />
-        <Route path="/submit" element={<PageWrapper><ResponsePage /></PageWrapper>} />
-        <Route path="/search" element={<PageWrapper><SearchPage /></PageWrapper>} />
+        <Route path="/submit" element={<PageWrapper><ResponsePage  /></PageWrapper>} />
+        <Route path="/search" element={<PageWrapper><SearchPage Quote={quotes[Math.floor(Math.random() * quotes.length)]} /></PageWrapper>} />
         <Route path="/success" element={<PageWrapper><ErrorPage /></PageWrapper>} />
         <Route path="/response" element={<PageWrapper><SearchResponse /></PageWrapper>} />
       </Routes>

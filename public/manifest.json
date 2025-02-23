@@ -9,10 +9,14 @@
       "tabs",
       "bookmarks",
       "cookies",
-      "storage"
+      "storage",
+      "scripting"
   ],
   "host_permissions": [
       "http://localhost:5173/*",
+      "http://localhost:5173/*",
+    "https://magical-famous-emu.ngrok-free.app/*",
+    "https://extension-auth.vercel.app/*",
       "<all_urls>"
   ],
   "web_accessible_resources": [
