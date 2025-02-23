@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import InputForm from "../components/InputForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface FormData {
@@ -26,15 +26,15 @@ export default function SubmitPage() {
     note: ''
   });
 
-  // const getLink = ()=>{
-  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //     console.log(tabs[0].url);
-  //     if(!tabs[0].url){
-  //       setFormData({...formData,link:""})
-  //     } else setFormData({...formData, link: tabs[0].url || ''})
-  //   })
-  // }
-  // getLink();
+  useEffect(() => {
+    const getLink = async () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const url = tabs[0]?.url || '';
+        setFormData(prev => ({ ...prev, link: url }));
+      });
+    };
+    getLink();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,7 +56,6 @@ export default function SubmitPage() {
       title: '',
       note: ''
     });
-    Navigate("/intro")
   };
 
   return (

@@ -8,7 +8,6 @@ const Intro = () => {
     const Navigate = useNavigate();
     const handleAuth = async () => {
       console.log("handleAuth Clicked");
-      // Try getting from localStorage first
       chrome.cookies.get({
           url: 'https://extension-auth.vercel.app',
           name: 'access_token',
@@ -22,19 +21,6 @@ const Intro = () => {
               window.open("https://extension-auth.vercel.app");
           }
       });
-      chrome.cookies.get({
-        url: 'https://extension-auth.vercel.app',
-        name: 'refresh_token',
-    }, function(cookie) {
-        if (cookie) {
-            localStorage.setItem('refresh_token', cookie.value);
-            Navigate("/submit");
-            console.log("Got the access_token: "+ cookie.value);
-        } else {
-            console.log("No access_token found");
-            window.open("https://extension-auth.vercel.app");
-        }
-    });
   }
 
   return (

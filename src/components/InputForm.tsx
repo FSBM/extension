@@ -1,5 +1,6 @@
 
 import Button from "./Button"
+import Loader from "./Loader"
 interface Props{
    handleSubmit:any,
    handleClear:any,
@@ -10,6 +11,7 @@ interface Props{
    rightBtnTxt:string
    showOnlyOne ?: boolean;
    Error?:string;
+   isLoading?:boolean;
 }
 interface FormData {
     link: string;
@@ -17,7 +19,7 @@ interface FormData {
     note: string;
 }
 
-export default function InputForm({handleSubmit,handleChange,handleClear,formData,BtnTxtClr,leftBtnTxt,rightBtnTxt,showOnlyOne,Error}:Props){
+export default function InputForm({handleSubmit,handleChange,handleClear,formData,BtnTxtClr,leftBtnTxt,rightBtnTxt,showOnlyOne,Error,isLoading}:Props){
 
 
 
@@ -34,6 +36,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
                           className="w-full border-b border-black bg-transparent focus:outline-none  pb-1 placeholder-[#151515]
                           placeholder-opacity-25"
                           placeholder="Your link here"
+                          disabled={isLoading}
                         />
                       </div>
             
@@ -47,6 +50,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
                           className="w-full border-b border-black bg-transparent focus:outline-none pb-1 placeholder-[#151515]
                           placeholder-opacity-25"
                           placeholder="Your title here"
+                          disabled={isLoading}
                         />
                       </div>
             
@@ -60,6 +64,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
                           className="w-full border-b border-black bg-transparent focus:outline-none placeholder-[#151515] pb-1
                           placeholder-opacity-25"
                           placeholder="Your note here"
+                          disabled={isLoading}
                         />
                       </div>
                      {Error?<div className="pb-0 mb-0 space-y-0">
@@ -67,8 +72,9 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
                       </div>:null}
             
                       <div className={`flex ${showOnlyOne?'justify-center':'justify-between'} mx-auto ${Error?"pt-0":"pt-10"}`}>
-                      <Button handle={handleClear} text={leftBtnTxt} textColor={BtnTxtClr} />
-                      {showOnlyOne?null:<Button handle={handleSubmit} text={rightBtnTxt} textColor={BtnTxtClr} />}
+                      <Button handle={handleClear} text={leftBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>
+                      {isLoading?<Loader/>:null}
+                      {showOnlyOne?null:<Button handle={handleSubmit} text={rightBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>}
                       </div>
                     </form>
     )

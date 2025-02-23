@@ -6,11 +6,12 @@ interface CardProps {
     bgColor: string;
     onClick: () => void;
     isSelected: boolean;
+    RedirectUrl?:string;
 }
 
 
 
-export default function Cards({ title, description, bgColor,onClick,isSelected }: CardProps) {
+export default function Cards({ title, description, bgColor,onClick,isSelected,RedirectUrl }: CardProps) {
     return (
         <>
           <div
@@ -33,12 +34,12 @@ export default function Cards({ title, description, bgColor,onClick,isSelected }
                     ? title
                     : title.split(' ').splice(0, 3).join(' ') + '..'}
                 </h2>
-                <p className="font-SansMono400 text-sm leading-snug opacity-90">
+                <p className="font-SansMono400 text-sm  max-w-[200px] leading-snug opacity-9 ">
                   {description}
                 </p>
               </div>
               <div className="w-[10%] flex justify-end ">
-                <RiArrowRightUpLine size={24} className="cursor-pointer"/>
+                <RiArrowRightUpLine size={24} className="cursor-pointer" onClick={()=>{isSelected?window.open(RedirectUrl):null}}/>
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import InputForm from "../components/InputForm";
 import { useState } from "react";
 
@@ -10,7 +9,6 @@ interface FormData {
 
 export default function ErrorPage() {
 
-    const Navigate = useNavigate();
 
 
 
@@ -41,7 +39,6 @@ export default function ErrorPage() {
       title: '',
       note: ''
     });
-    Navigate("/intro")
   };
 
   return (

@@ -5,13 +5,14 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
+  --primary-red: #ff4c4c;
   --primary-blue: #76ADFF;
   --primary-green: #DAEF68;
   --primary-yellow: #FFCE00;
   --primary-orange: #FF8E59;
   --primary-white: #FFFFFF;
-
   --soft-blue: #A3C8FF;
   --deep-blue: #4A90E2;
   --light-green: #B4E4A3;
@@ -24,7 +25,7 @@
   --muted-teal: #4FB5B5;
   --light-gray: #E1E1E1;
   --dark-gray: #707070;
-  --rich-burgundy: #9B1A1B;
+  --rich-burgundy: #a71d1d;
   --earthy-brown: #8D6E63;
   --pastel-purple: #D1A6F0;
   --peach-pink: #FFABAB;
@@ -78,6 +79,11 @@ body ::placeholder{
 .nyr {
   font-family: "Nanum Myeongjo", serif;
   font-weight: 400;
+  font-style: normal;
+}
+.nyr-semibold {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 500;
   font-style: normal;
 }
 
