@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
+@import url('https://fonts.cdnfonts.com/css/georgia');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +11,7 @@
   --primary-red: #ff4c4c;
   --primary-blue: #76ADFF;
   --primary-green: #DAEF68;
-  --primary-yellow: #FFCE00;
+  --primary-yellow:  #fff900;
   --primary-orange: #FF8E59;
   --primary-white: #FFFFFF;
   --soft-blue: #A3C8FF;
@@ -147,5 +148,11 @@ body ::placeholder{
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
+}
+
+.Georgia{font-family: 'Georgia', sans-serif;}
+
+textarea{
+  resize: none;
 }
 

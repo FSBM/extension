@@ -1,6 +1,7 @@
 
 import Button from "./Button"
-import Loader from "./Loader"
+import LoaderPillars from "./LoaderPillars"
+
 interface Props{
    handleSubmit:any,
    handleClear:any,
@@ -56,14 +57,14 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
             
                       <div className="space-y-1">
                         <label className="block text-sm font-SansMono400">Note:</label>
-                        <input
-                          type="text"
+                        <textarea
                           name="note"
+                          rows={2}
                           value={formData.note}
                           onChange={handleChange}
                           className="w-full border-b border-black bg-transparent focus:outline-none placeholder-[#151515] pb-1
                           placeholder-opacity-25"
-                          placeholder="Your note here"
+                          placeholder="Enter a descriptive note for better search results"
                           disabled={isLoading}
                         />
                       </div>
@@ -73,7 +74,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
             
                       <div className={`flex ${showOnlyOne?'justify-center':'justify-between'} mx-auto ${Error?"pt-0":"pt-10"}`}>
                       <Button handle={handleClear} text={leftBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>
-                      {isLoading?<Loader/>:null}
+                      {isLoading?<LoaderPillars/>:null}
                       {showOnlyOne?null:<Button handle={handleSubmit} text={rightBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>}
                       </div>
                     </form>

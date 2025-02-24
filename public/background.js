@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
     if (message.action === "search") {
       fetch(`https://hippocampus-backend.onrender.com/links/search?query=${message.query}`, {
-        method: 'POST',
+        method: 'GET',
         headers: { 'access_token': message.cookies },
         'access_token': message.cookies,
         'user_id': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_id' }),
