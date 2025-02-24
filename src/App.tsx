@@ -10,9 +10,9 @@ import './index.css';
 
 
 const pageVariants = {
-  initial: { opacity: 1, y: 0 },  
-  animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },  
-  exit: { opacity: 1, y: 0, transition: { duration: 0.2 } }  
+  initial: { opacity: 1, y: 0 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+  exit: { opacity: 1, y: 0, transition: { duration: 0.2 } }
 };
 
 import { ReactNode, useEffect, useState } from "react";
@@ -41,9 +41,9 @@ const AnimatedRoutes = () => {
   const [quotes, setQuotes] = useState<string[]>([]);
 
   function checkForCookie() {
-    chrome.cookies.getAll({url: "https://extension-auth.vercel.app"},(cookies) => {
+    chrome.cookies.getAll({ url: "https://extension-auth.vercel.app" }, (cookies) => {
       const accessToken = cookies.find((cookie) => cookie.name === "access_token")?.value;
-      
+
       if (accessToken && location.pathname === "/") {
         Navigate("/submit");
         localStorage.setItem("access_token", accessToken);
@@ -52,23 +52,23 @@ const AnimatedRoutes = () => {
       }
     });
   }
-  
+
   checkForCookie();
 
   useEffect(() => {
     const handleAuthFlow = async () => {
-      
+
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
       if (!tab?.url) return;
 
-      
+
 
       try {
         const url = new URL(tab.url);
         const accessToken = localStorage.getItem("access_token");
 
-      
+
         if (accessToken) {
           await chrome.cookies.set({
             url: import.meta.env.VITE_API_URL,
@@ -77,7 +77,7 @@ const AnimatedRoutes = () => {
             path: '/',
             domain: new URL(import.meta.env.VITE_API_URL).hostname
           });
-          
+
           console.log("Cookie successfully set for domain:", new URL(import.meta.env.VITE_API_URL).hostname);
           await chrome.cookies.set({
             url: tab.url,
@@ -86,49 +86,55 @@ const AnimatedRoutes = () => {
             path: '/',
             domain: url.hostname
           });
-          
+
           const cookie = await chrome.cookies.get({
             url: tab.url,
             name: 'access_token',
           });
-          
+
 
           if (cookie && location.pathname === "/") {
             Navigate("/submit");
-            
+
             console.log("the cookie is set in state and the value is", cookie.value);
             console.log("Cookie successfully set for domain:", url.hostname);
-            
+
           }
         }
       } catch (error) {
         console.error("Error handling auth flow:", error);
-        
+
       }
 
+
+      if(localStorage.getItem("quotes")){
+        setQuotes(JSON.parse(localStorage.getItem("quotes") || "[]"));
+        
+      }else{chrome.runtime.sendMessage(
+        {
+          cookies: localStorage.getItem("access_token"),
+          action: "getQuotes"
+        },
+        (response) => {
+          if (response.success) {
+            console.log("API Response:", response.data);
+
+            if (response.data) {
+              const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
+              setQuotes(prev => [
+                ...new Set([...prev, ...filteredQuotes])
+                
+              ]);
+              localStorage.setItem("quotes", JSON.stringify(filteredQuotes));
+            }
+
+            console.log("Quotes update triggered");
+          } else {
+            console.error("API Error:", response.error);
+          }
+        }
+      );}
       
-chrome.runtime.sendMessage(
-  {
-    cookies: localStorage.getItem("access_token"),
-    action: "getQuotes"  
-  },
-  (response) => {
-    if (response.success) {
-      console.log("API Response:", response.data);
-      
-      if (response.data) {
-        const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
-        setQuotes(prev => [
-          ...new Set([...prev, ...filteredQuotes]) 
-        ]);
-      }
-      
-      console.log("Quotes update triggered");
-    } else {
-      console.error("API Error:", response.error);
-    }
-  }
-);
     };
 
     handleAuthFlow();
@@ -152,7 +158,7 @@ chrome.runtime.sendMessage(
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><Intro /></PageWrapper>} />
-        <Route path="/submit" element={<PageWrapper><ResponsePage  /></PageWrapper>} />
+        <Route path="/submit" element={<PageWrapper><ResponsePage /></PageWrapper>} />
         <Route path="/search" element={<PageWrapper><SearchPage Quote={quotes[Math.floor(Math.random() * quotes.length)]} /></PageWrapper>} />
         <Route path="/success" element={<PageWrapper><ErrorPage /></PageWrapper>} />
         <Route path="/response" element={<PageWrapper><SearchResponse /></PageWrapper>} />

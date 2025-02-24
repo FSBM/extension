@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import InputForm from "../components/InputForm";
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import '../index.css';
 interface FormData {
@@ -24,6 +24,29 @@ export default function ResponsePage() {
 
   const Navigate = useNavigate();
   const [DoneNumber, setDoneNumber] = useState(0);
+
+
+  useEffect(() => {
+    if( new Date().getHours() < 12){
+      setTitle("Good Morning,")
+    }else if(new Date().getHours() < 17){
+      setTitle("Good Afternoon,")
+    }else if( new Date().getHours() < 20){
+      setTitle("Good Evening,")
+    }else{
+      setTitle("Good Night,")
+    } 
+  }, []);
+
+  useEffect(() => {
+       chrome.cookies.get({url:'https://hippocampus-backend.onrender.com',name:'user_name'},(cookie)=>{
+        if(cookie){
+         
+            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}...`)
+      }
+    });
+  }, []);
+
 
 
 
@@ -55,7 +78,7 @@ export default function ResponsePage() {
 
   const handleResponse = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
 
     if (formData.link == "" || formData.title == "") {
       setnotSubmitted(true);
@@ -120,29 +143,40 @@ export default function ResponsePage() {
 
       <div className={`max-w-md bg-[var(${bgClr})] rounded-lg px-9 w-[420px] h-[500px] flex flex-col justify-between py-14
       border border-black`}>
-       
-        
+
+
         <div className="flex justify-between items-center mb-6 gap-2 ">
           <div className='flex flex-col justify-end pl-1 -gap-2'>
-            <h1 className="text-3xl nanum-myeongjo-regular pr-2">{title}</h1>
-            <p className="text-xs text-black font-SansText400 mt-[-5px]  pl-1">{subTxt}</p>
+            <h1 className="text-[28px] nanum-myeongjo-regular pr-2">{title}</h1>
+            <p className="text-base text-black Georgia mt-[-8px]  pl-1">{subTxt}</p>
           </div>
-          {notSubmitted ? <div className="relative flex items-center cursor-pointer  border-black border-[1.5px] rounded-full bg-transparent px-2 py-2" onClick={
-            () => {
-              Navigate("/search")
-            }
-          }>
-            <input
-              type="text"
-              placeholder="SEARCH"
-              className="bg-transparent focus:outline-none text-black placeholder:text-[11px] placeholder:text-black w-[70px]
-              font-SansText400 pb-[2px] placeholder:tracking-widest cursor-pointer"
-            />
-            <BiSearchAlt2 size={24} />
-          </div> : null}
+          {notSubmitted ?
+            <div
+              className="group relative flex items-center cursor-pointer box-border bg-transparent 
+             px-2 py-2 rounded-full "
+              onClick={() => Navigate("/search")}
+            >
+              <input
+                type="text"
+                placeholder="SEARCH"
+                className="bg-transparent focus:outline-none text-black placeholder:text-[11px] 
+              placeholder:text-black w-[70px] font-SansText400 pb-[2px] 
+              placeholder:tracking-widest cursor-pointer relative z-10"
+              />
+              <BiSearchAlt2 size={24} className="relative z-10" />
+
+              {/* Animated border element */}
+              <div className="absolute inset-0 before:absolute before:inset-0 before:border-[1.5px] 
+                before:border-black before:rounded-full before:scale-100 
+                before:transition-transform before:duration-300 before:ease-in-out 
+                group-hover:before:scale-105 group-hover:before:border-2">
+              </div>
+            </div>
+
+            : null}
         </div>
-        
-        
+
+
         <InputForm
           handleChange={handleChange}
           handleClear={handleClear}
