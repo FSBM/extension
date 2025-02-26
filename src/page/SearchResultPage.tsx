@@ -8,6 +8,7 @@ interface ProcessedResult {
   title: string;
   url: string;
   content: string;
+  date: string;
 }
 
 const SearchResponse: React.FC = () => {
@@ -53,6 +54,7 @@ const SearchResponse: React.FC = () => {
     fullDescription: string;
     bgColor: string;
     RedirectUrl: string;
+    date: string;
   }
   
   const [Card, setCards] = useState<CardType[]>([]);
@@ -100,13 +102,21 @@ const SearchResponse: React.FC = () => {
           console.log("No documents found matching query");
           return;
         }
-        console.log("this is the response data after searching :" + responseData);
         const newCards = responseData.map((item: any, index: number) => ({
           key: Card.length + index + 1,
           title: item.title,
           fullDescription: (item.content===""?"No Description":item.content),
           bgColor: getNextColor(),
-          RedirectUrl: item.url
+          RedirectUrl: item.url,
+          date: item.date ? 
+
+          new Date(item.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })
+          
+          : "No Date"
         }));
         setCards(newCards);
       }
@@ -147,6 +157,7 @@ const SearchResponse: React.FC = () => {
               onClick={() => setSelectedIndex(index)}
               isSelected={false}
               RedirectUrl={card.RedirectUrl}
+              date={card.date}
             />
           ))
           : (
@@ -157,6 +168,7 @@ const SearchResponse: React.FC = () => {
               onClick={() => null}
               isSelected={true}
               RedirectUrl={Card[selectedIndex].RedirectUrl}
+              date={Card[selectedIndex].date}
             />
           )}
       </div>)}

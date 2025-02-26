@@ -7,11 +7,12 @@ interface CardProps {
     onClick: () => void;
     isSelected: boolean;
     RedirectUrl?:string;
+    date:string
 }
 
 
 
-export default function Cards({ title, description, bgColor,onClick,isSelected,RedirectUrl }: CardProps) {
+export default function Cards({ title, description, bgColor,onClick,isSelected,RedirectUrl,date }: CardProps) {
     return (
         <>
           <div
@@ -27,7 +28,7 @@ export default function Cards({ title, description, bgColor,onClick,isSelected,R
             <div className="flex justify-between items-start ">
               <div className={`pr-8 w-[90%] ${isSelected ? 'p-16 pt-28' : ''}`}>
                 {isSelected ? (
-                  <p className="nyr text-[16px]">30 January 2025</p>
+                  <p className="nyr text-[16px]">{date}</p>
                 ) : null}
                 <h2 className="text-[22px] nyr mb-2 leading-tight">
                   {isSelected
@@ -38,9 +39,19 @@ export default function Cards({ title, description, bgColor,onClick,isSelected,R
                   {description}
                 </p>
               </div>
-              <div className="w-[10%] flex justify-end ">
-                <RiArrowRightUpLine size={24} className="cursor-pointer" onClick={()=>{isSelected?window.open(RedirectUrl):null}}/>
+             <div className="w-[10%] flex flex-col justify-ece ">
+             <div className="w-[100%] flex justify-end ">
+                <RiArrowRightUpLine size={28} className="cursor-pointer" onClick={()=>{isSelected?window.open(RedirectUrl):null}}/>
               </div>
+              <div className="w-[100%] flex justify-end ">
+              {isSelected ? (
+                    <p className="font-SansMono400 text-[10px] mt-1">{RedirectUrl?.split("//")[1].slice(0, 10)+"..."}</p>
+                  ) : (
+                    null
+                  )
+                  }
+              </div>
+             </div>
             </div>
           </div>
         </>
