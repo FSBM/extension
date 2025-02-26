@@ -10,6 +10,10 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
+chrome.actions.onClicked.addListener((tab) => {
+  console.log("Action clicked on:"+ tab);
+});
+
 
 
 

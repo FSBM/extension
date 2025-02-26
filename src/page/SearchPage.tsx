@@ -39,6 +39,7 @@ export default function SearchPage({ Quote }: Props) {
                         title: item.metadata.title,
                         url: item.metadata.source_url,
                         content: item.metadata.note,
+                        date: item.metadata.date
                     }));
                     console.log("Response Array this given as: ", responseArray);
                     Navigate("/response", { state: { data: responseArray } });
@@ -83,7 +84,7 @@ export default function SearchPage({ Quote }: Props) {
                         <ColorChangingSpinner />
                     
                     ) :
-                    <BiSearchAlt2 size={24} />}
+                    <BiSearchAlt2 size={24} opacity={(query.length > 0) ? 1 : 0.4} onClick={(query.length > 0) ? handleSearch : undefined } />}
                 </div>
                 <div className="nanum-myeongjo-regular text-4xl text-center">
                     <motion.h1
@@ -93,8 +94,9 @@ export default function SearchPage({ Quote }: Props) {
                         className="text-center"
                     >"{Quote}"</motion.h1>
                 </div>
-                <div className="w-[100px] mx-auto">
+                <div className="w-[95%] mx-auto flex justify-between items-center">
                     <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />
+                    <Button text="SHOW ALL" handle={()=> Navigate("/response")} textColor="--primary-white" />  
                 </div>
             </div>
         </>
