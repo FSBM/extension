@@ -3,12 +3,15 @@ import Cards from '../components/Cards';
 import Button from '../components/Button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../index.css';
+import { RiChatDeleteFill } from "react-icons/ri";
+import LoaderPillars from '../components/LoaderPillars';
 
 interface ProcessedResult {
   title: string;
   url: string;
   content: string;
   date: string;
+  ID: string;
 }
 
 const SearchResponse: React.FC = () => {
@@ -55,10 +58,22 @@ const SearchResponse: React.FC = () => {
     bgColor: string;
     RedirectUrl: string;
     date: string;
+    ID: string;
   }
   
   const [Card, setCards] = useState<CardType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [DeleteClicked, setDeleteClicked] = useState<boolean>(false);
+  const [confirmDelete , setConfirmDelete] = useState<boolean>(false);
+  const [DeleteSuccess, setDeleteSuccess] = useState<boolean>(true);
+  const [DeletedBookmarks, setDeletedBookmarks] = useState(new Set());
   const allBookmarks: string[] = [];
+  console.log("These are the deleted Bookmarks:"+ JSON.stringify(DeletedBookmarks));
+  useEffect(() => {
+    if(localStorage.getItem("deletedBookmarks")){
+      setDeletedBookmarks(new Set(JSON.parse(localStorage.getItem("deletedBookmarks") || "[]")));
+    }
+  },[]);
 
   useEffect(() => {
     const getAllBookmarks = () => {
@@ -109,15 +124,19 @@ const SearchResponse: React.FC = () => {
           bgColor: getNextColor(),
           RedirectUrl: item.url,
           date: item.date ? 
-
-          new Date(item.date).toLocaleDateString("en-GB", {
+            new Date(item.date).toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "long",
             year: "numeric",
           })
           
-          : "No Date"
-        }));
+          : "No Date",
+          ID: item.ID
+
+
+        }
+
+      ));
         setCards(newCards);
       }
 
@@ -125,6 +144,53 @@ const SearchResponse: React.FC = () => {
 
     getAllBookmarks();
   }, allBookmarks);
+
+  const handleDelete = () => {
+    setIsLoading(true);
+    if (selectedIndex !== null) {
+      console.log("Delete Clicked AND PASSED ID:" + Card[selectedIndex].ID + " Bookmark : " + Card[selectedIndex].title);
+    } else {
+      console.log("Delete Clicked AND PASSED ID: not passed Bookmark: not passed");
+    }
+    chrome.runtime.sendMessage({ action: "delete", query:selectedIndex?Card[selectedIndex].ID:"" , cookies: localStorage.getItem("access_token") },
+    (response) => {
+        console.log(response);
+        if (response) {
+            console.log("API Response of query:", JSON.stringify(response.data)); 
+            if(response.data.detail==="Failed to delete document"){
+              setDeleteSuccess(false);
+              setIsLoading(false);
+            }else{
+              setCards(prevCards => prevCards.filter((_, index) => index !== selectedIndex));
+
+              if (selectedIndex !== null && Card[selectedIndex]) {
+                const idToDelete = Card[selectedIndex].ID;
+                setDeletedBookmarks(prevSet => {
+                  const newSet = new Set(prevSet);
+                  newSet.add(idToDelete);
+                  localStorage.setItem("deletedBookmarks", JSON.stringify(Array.from(newSet)));
+                  console.log("Adding ID to set:", idToDelete);
+                  console.log("New set after adding:", newSet);
+                  return newSet;
+                });
+              }
+
+             
+              if (selectedIndex !== null) {
+                console.log("Now deleted the bookmark :", Card[selectedIndex]);
+              }
+              console.log("Deleted Bookmarks: ", DeletedBookmarks);
+              setDeleteSuccess(true);
+              setIsLoading(false);
+            }
+        } else {
+          console.error("API Error:", response.error);
+          setDeleteSuccess(false);
+              setIsLoading(false);
+        } 
+  })
+  }
+
 
 
   const Navigate = useNavigate();
@@ -148,43 +214,99 @@ const SearchResponse: React.FC = () => {
           : 'overflow-y-scroll py-0 px-0 cursor-default'}
         [&::-webkit-scrollbar]:hidden w-[100%] h-[100%]`}>
         {selectedIndex === null
-          ? Card.map((card, index) => (
-            <Cards
-              key={index}
-              title={card.title}
-              description={card.fullDescription.slice(0, 15) + "..."}
-              bgColor={card.bgColor}
-              onClick={() => setSelectedIndex(index)}
-              isSelected={false}
-              RedirectUrl={card.RedirectUrl}
-              date={card.date}
-            />
-          ))
+          ? Card.map((card, index) => {
+            const isDeleted = DeletedBookmarks.has(card.ID);
+            console.log(`Card ${card.ID} isDeleted: ${isDeleted}`);
+            
+            return isDeleted ? 
+              null : 
+              <Cards
+                key={index}
+                title={card.title}
+                description={(card.fullDescription.length > 10) ? 
+                  card.fullDescription.slice(0, 10) + "..." : 
+                  card.fullDescription}
+                bgColor={card.bgColor}
+                onClick={() => setSelectedIndex(index)}
+                isSelected={false}
+                RedirectUrl={card.RedirectUrl}
+                date={card.date}
+              />
+          })
           : (
-            <Cards
-              title={Card[selectedIndex].title}
-              description={Card[selectedIndex].fullDescription}
-              bgColor={Card[selectedIndex].bgColor}
-              onClick={() => null}
-              isSelected={true}
-              RedirectUrl={Card[selectedIndex].RedirectUrl}
-              date={Card[selectedIndex].date}
-            />
+            
+            
+            
+            DeleteClicked?
+              <p className='nyr flex justify-center items-center bg-[var(--primary-red)] text-2xl text-center text-black
+              w-[100%] h-[90%]'>Are you sure you want to delete this bookmark ?</p>
+            :
+            confirmDelete?
+            isLoading?
+              <div className='flex justify-center items-center w-full h-[90%] bg-[var(--primary-red)]'>
+                <LoaderPillars />
+              </div>
+            :
+            DeleteSuccess?
+            <p className='nyr flex justify-center items-center bg-[var(--primary-green)] text-2xl text-center text-black
+            w-[100%] h-[90%]'>Bookmark Deleted Successfully !</p>:
+            <p className='nyr flex justify-center items-center bg-[var(--primary-red)] text-2xl text-center text-black  
+            w-[100%] h-[90%]'>Failed to delete Bookmark !</p>
+            :
+              
+              <Cards
+            title={Card[selectedIndex].title}
+            description={Card[selectedIndex].fullDescription}
+            bgColor={Card[selectedIndex].bgColor}
+            onClick={() => null}
+            isSelected={true}
+            RedirectUrl={Card[selectedIndex].RedirectUrl}
+            date={Card[selectedIndex].date}
+          />
+          
+          
+          
           )}
       </div>)}
 
       <div className="absolute bottom-0 rounded-b-lg w-full min-h-[90px] flex items-center justify-between px-10 bg-white border-t border-black">
         <Button
-          text='BACK'
+          text={DeleteClicked?"NO":'BACK'}
           handle={() => {
-            if (selectedIndex === null) Navigate("/search");
-            else setSelectedIndex(null);
+            if(DeleteClicked){
+              setDeleteClicked(false);
+            }else{
+
+              if (selectedIndex === null) Navigate("/search");
+              else setSelectedIndex(null);
+              setConfirmDelete(false);
+              setDeleteSuccess(false);
+            }
           }}
           textColor='--primary-white'
         />
+        {selectedIndex !== null?
+
+        <button 
+        disabled={confirmDelete}
+        className='bg-black rounded-full p-[8px]'>
+          <RiChatDeleteFill 
+          onClick={()=>setDeleteClicked(true)}
+          size={28} color='white'/>
+        </button>
+        
+        :null}
         <Button
-          text='HOME'
-          handle={() => Navigate("/")}
+          text={DeleteClicked?"YES":'HOME'}
+          handle={() => {
+            if (DeleteClicked) {
+              handleDelete();
+              setDeleteClicked(false);
+              setConfirmDelete(true);
+            } else {
+              Navigate("/");
+            }
+          }}
           textColor='--primary-white'
         />
       </div>

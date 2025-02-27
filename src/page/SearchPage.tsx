@@ -16,6 +16,7 @@ export default function SearchPage({ Quote }: Props) {
     const Navigate = useNavigate();
     const [query, setQuery] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setisError] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -39,7 +40,8 @@ export default function SearchPage({ Quote }: Props) {
                         title: item.metadata.title,
                         url: item.metadata.source_url,
                         content: item.metadata.note,
-                        date: item.metadata.date
+                        date: item.metadata.date,
+                        ID: item.id
                     }));
                     console.log("Response Array this given as: ", responseArray);
                     Navigate("/response", { state: { data: responseArray } });
@@ -72,7 +74,12 @@ export default function SearchPage({ Quote }: Props) {
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                handleSearch();
+                                if(query.length < 4){
+                                    setisError(true)
+                                }
+                                else{
+                                    handleSearch();
+                                }
                             }
                         }}
                         className="bg-transparent focus:outline-none text-black placeholder:text-[11px] placeholder:text-black w-[80%]
@@ -84,15 +91,15 @@ export default function SearchPage({ Quote }: Props) {
                         <ColorChangingSpinner />
                     
                     ) :
-                    <BiSearchAlt2 size={24} opacity={(query.length > 0) ? 1 : 0.4} onClick={(query.length > 0) ? handleSearch : undefined } />}
+                    <BiSearchAlt2 size={24} opacity={(query.length > 0) ? 1 : 0.4} onClick={(query.length > 3) ? handleSearch : undefined } />}
                 </div>
-                <div className="nanum-myeongjo-regular text-4xl text-center">
+                <div className={`nanum-myeongjo-regular text-4xl text-center ${isError?"text-red-900":"text-black"}`}>
                     <motion.h1
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.5 }}
                         className="text-center"
-                    >"{Quote}"</motion.h1>
+                    >"{isError?"The Query must be atleast 4 characters !":Quote}"</motion.h1>
                 </div>
                 <div className="w-[95%] mx-auto flex justify-between items-center">
                     <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />

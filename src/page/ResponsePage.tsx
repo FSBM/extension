@@ -25,6 +25,11 @@ export default function ResponsePage() {
   const Navigate = useNavigate();
   const [DoneNumber, setDoneNumber] = useState(0);
 
+  function isValidURL(url:string) {
+    const simplePattern = /^(https?:\/\/)(.+)(\.[a-z]{2,})$/i;
+    return simplePattern.test(url);
+  }
+
 
   useEffect(() => {
     if( new Date().getHours() < 12){
@@ -80,8 +85,11 @@ export default function ResponsePage() {
     e.preventDefault();
 
 
-    if (formData.link == "" || formData.title == "") {
+    if (formData.link == "" || isValidURL(formData.link) || formData.title == "") {
       setnotSubmitted(true);
+      if(isValidURL(formData.link)){
+        setisError("Enter a valid link!")
+      }
       setisError("Link or Title missing!")
       return
     }
@@ -98,7 +106,7 @@ export default function ResponsePage() {
           setbgClr("--primary-green")
           setTitle("Successful !")
           setSubTxt("Your entry has been saved.")
-          setLftBtnTxt("BACK")
+          setLftBtnTxt("CLOSE")
           setBtnTxtClr("--primary-green")
           setRtBtnTxt("HOME")
           setShowOnlyOne(true)
@@ -122,20 +130,37 @@ export default function ResponsePage() {
   }
 
   const handleClear = () => {
-    setFormData({
-      link: '',
-      title: '',
-      note: ''
-    });
-    setbgClr("--primary-yellow")
-    setTitle("Good Morning")
-    setSubTxt("Welcome User...")
-    setLftBtnTxt("CLEAR")
-    setBtnTxtClr("--primary-yellow")
-    setRtBtnTxt("SUBMIT")
-    setnotSubmitted(true);
-    setisError('')
-    setShowOnlyOne(false)
+    if (showOnlyOne && leftBtnTxt == "CLOSE") {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tabId = tabs[0].id;
+        if(tabId){
+          chrome.tabs.sendMessage(tabId, { 
+            action: "closeExtension",
+            target: "content"
+          }, () => {
+            console.log("Exited the extension ");
+          });
+        }
+      });
+    }
+    else{
+      setFormData({
+        link: '',
+        title: '',
+        note: ''
+      });
+      setbgClr("--primary-yellow")
+      setTitle("Good Morning")
+      setSubTxt("Welcome User...")
+      setLftBtnTxt("CLEAR")
+      setBtnTxtClr("--primary-yellow")
+      setRtBtnTxt("SUBMIT")
+      setnotSubmitted(true);
+      setisError('')
+      setShowOnlyOne(false);
+    }
+
+    
   };
 
   return (
