@@ -10,9 +10,6 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
-chrome.actions.onClicked.addListener((tab) => {
-  console.log("Action clicked on:"+ tab);
-});
 
 
 
@@ -20,6 +17,8 @@ chrome.actions.onClicked.addListener((tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log("Message received in background script:", message);
+
+
   
     if (message.action === "search") {
       fetch(`https://hippocampus-backend.onrender.com/links/search?query=${message.query}`, {
@@ -71,7 +70,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => sendResponse({ success: false, error: error.message }));
       return true;
     }
-    else {
-      sendResponse({ success: false, error: "Invalid message action" });
+    else if(message.action === "delete"){
+      console.log(message.query);
+      fetch(`https://hippocampus-backend.onrender.com/links/delete?doc_id=${message.query}`, {
+        method: 'DELETE',
+        headers: { 'access_token': message.cookies }
+      })
+      .then(response => response.json())
+      .then(data => sendResponse({ success: true, data }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+      return true;
     }
+    
+    else {
+      null
+    }
+    
   });
