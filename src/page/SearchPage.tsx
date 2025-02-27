@@ -93,13 +93,13 @@ export default function SearchPage({ Quote }: Props) {
                     ) :
                     <BiSearchAlt2 size={24} opacity={(query.length > 0) ? 1 : 0.4} onClick={(query.length > 3) ? handleSearch : undefined } />}
                 </div>
-                <div className={`nanum-myeongjo-regular text-4xl text-center ${isError?"text-red-700":"text-white"}`}>
+                <div className={`nanum-myeongjo-regular text-4xl text-center ${isError?"text-red-900":"text-black"}`}>
                     <motion.h1
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.5 }}
                         className="text-center"
-                    >"{isError?"The Query must be atleast 4 characters":Quote}"</motion.h1>
+                    >"{isError?"The Query must be atleast 4 characters !":Quote}"</motion.h1>
                 </div>
                 <div className="w-[95%] mx-auto flex justify-between items-center">
                     <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />

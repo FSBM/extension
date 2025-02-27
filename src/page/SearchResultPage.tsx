@@ -66,8 +66,14 @@ const SearchResponse: React.FC = () => {
   const [DeleteClicked, setDeleteClicked] = useState<boolean>(false);
   const [confirmDelete , setConfirmDelete] = useState<boolean>(false);
   const [DeleteSuccess, setDeleteSuccess] = useState<boolean>(true);
-  const [DeletedBoomarks, setDeletedBookmarks] = useState(new Set());
+  const [DeletedBookmarks, setDeletedBookmarks] = useState(new Set());
   const allBookmarks: string[] = [];
+  console.log("These are the deleted Bookmarks:"+ JSON.stringify(DeletedBookmarks));
+  useEffect(() => {
+    if(localStorage.getItem("deletedBookmarks")){
+      setDeletedBookmarks(new Set(JSON.parse(localStorage.getItem("deletedBookmarks") || "[]")));
+    }
+  },[]);
 
   useEffect(() => {
     const getAllBookmarks = () => {
@@ -156,7 +162,24 @@ const SearchResponse: React.FC = () => {
               setIsLoading(false);
             }else{
               setCards(prevCards => prevCards.filter((_, index) => index !== selectedIndex));
-              setDeletedBookmarks(prevDeletedBookmarks => new Set([...prevDeletedBookmarks, selectedIndex ? Card[selectedIndex].ID : ""])); 
+
+              if (selectedIndex !== null && Card[selectedIndex]) {
+                const idToDelete = Card[selectedIndex].ID;
+                setDeletedBookmarks(prevSet => {
+                  const newSet = new Set(prevSet);
+                  newSet.add(idToDelete);
+                  localStorage.setItem("deletedBookmarks", JSON.stringify(Array.from(newSet)));
+                  console.log("Adding ID to set:", idToDelete);
+                  console.log("New set after adding:", newSet);
+                  return newSet;
+                });
+              }
+
+             
+              if (selectedIndex !== null) {
+                console.log("Now deleted the bookmark :", Card[selectedIndex]);
+              }
+              console.log("Deleted Bookmarks: ", DeletedBookmarks);
               setDeleteSuccess(true);
               setIsLoading(false);
             }
@@ -191,23 +214,25 @@ const SearchResponse: React.FC = () => {
           : 'overflow-y-scroll py-0 px-0 cursor-default'}
         [&::-webkit-scrollbar]:hidden w-[100%] h-[100%]`}>
         {selectedIndex === null
-          ? Card.map((card, index) => (
-            DeletedBoomarks.has(card.ID) ? <p>Found Deleted Bookmark: {card.ID}</p> :
-            <Cards
-              key={index}
-              title={card.title}
-              description={
-
-                (card.fullDescription.length>10)?card.fullDescription.slice(0, 10):card.fullDescription 
-                
-                + "..."}
-              bgColor={card.bgColor}
-              onClick={() => setSelectedIndex(index)}
-              isSelected={false}
-              RedirectUrl={card.RedirectUrl}
-              date={card.date}
-            />
-          ))
+          ? Card.map((card, index) => {
+            const isDeleted = DeletedBookmarks.has(card.ID);
+            console.log(`Card ${card.ID} isDeleted: ${isDeleted}`);
+            
+            return isDeleted ? 
+              null : 
+              <Cards
+                key={index}
+                title={card.title}
+                description={(card.fullDescription.length > 10) ? 
+                  card.fullDescription.slice(0, 10) + "..." : 
+                  card.fullDescription}
+                bgColor={card.bgColor}
+                onClick={() => setSelectedIndex(index)}
+                isSelected={false}
+                RedirectUrl={card.RedirectUrl}
+                date={card.date}
+              />
+          })
           : (
             
             
