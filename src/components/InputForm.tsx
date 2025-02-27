@@ -22,6 +22,8 @@ interface FormData {
 
 export default function InputForm({handleSubmit,handleChange,handleClear,formData,BtnTxtClr,leftBtnTxt,rightBtnTxt,showOnlyOne,Error,isLoading}:Props){
 
+  
+
 
 
     return(
