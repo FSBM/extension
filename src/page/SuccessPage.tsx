@@ -40,7 +40,7 @@ export default function SubmitPage() {
       <div className="max-w-md bg-[var(--primary-green)] rounded-lg px-10 w-[420px] h-[500px] flex flex-col justify-center border border-black">
         <div className="flex justify-between items-center mb-8 gap-5 ">
           <div className='flex flex-col justify-end pl-1 -gap-2'>
-            <h1 className="text-3xl nanum-myeongjo-regular pr-2">Successful !</h1>
+            <h1 className="text-3xl font-NanumMyeongjo  pr-2">Successful !</h1>
             <p className="text-sm text-black font-SansText400 mt-[-5px]  pr-4"> Your entry has been saved</p>
           </div>
           {/* <div className="relative flex items-center cursor-pointer  border-black border-[1.5px] rounded-full bg-transparent px-2 py-2" onClick={

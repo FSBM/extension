@@ -2,6 +2,7 @@
 import Button from "./Button"
 import LoaderPillars from "./LoaderPillars"
 
+
 interface Props{
    handleSubmit:any,
    handleClear:any,
@@ -76,7 +77,7 @@ export default function InputForm({handleSubmit,handleChange,handleClear,formDat
             
                       <div className={`flex ${showOnlyOne?'justify-center':'justify-between'} mx-auto ${Error?"pt-0":"pt-10"}`}>
                       <Button handle={handleClear} text={leftBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>
-                      {isLoading?<LoaderPillars/>:null}
+                      {isLoading?<LoaderPillars />:null}
                       {showOnlyOne?null:<Button handle={handleSubmit} text={rightBtnTxt} textColor={BtnTxtClr} iSdisabled={isLoading ?? false}/>}
                       </div>
                     </form>
