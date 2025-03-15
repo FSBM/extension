@@ -67,7 +67,6 @@ const SearchResponse: React.FC = () => {
   const [DeleteSuccess, setDeleteSuccess] = useState<boolean>(true);
   const [DeletedBookmarks, setDeletedBookmarks] = useState(new Set());
   const allBookmarks: string[] = [];
-  console.log("These are the deleted Bookmarks:"+ JSON.stringify(DeletedBookmarks));
   useEffect(() => {
     if(localStorage.getItem("deletedBookmarks")){
       setDeletedBookmarks(new Set(JSON.parse(localStorage.getItem("deletedBookmarks") || "[]")));
@@ -113,7 +112,6 @@ const SearchResponse: React.FC = () => {
 
       if (responseData) {
         if(responseData.length===0){
-          console.log("No documents found matching query");
           return;
         }
         const newCards = responseData.map((item: any, index: number) => ({
@@ -147,17 +145,12 @@ const SearchResponse: React.FC = () => {
   const handleDelete = () => {
     setIsLoading(true);
     if (selectedIndex !== null) {
-      console.log("Delete Clicked AND PASSED ID:" + Card[selectedIndex].ID + " Bookmark : " + Card[selectedIndex].title);
     } else {
-      console.log("Delete Clicked AND PASSED ID: not passed Bookmark: not passed");
     }
-    console.log("id to be deleted:" + (selectedIndex !== null ? Card[selectedIndex].ID : ""))
     chrome.runtime.sendMessage({ action: "delete", query:(selectedIndex !== null ? Card[selectedIndex].ID : ""), cookies: localStorage.getItem("access_token") },
     
     (response) => {
-        console.log(response);
         if (response) {
-            console.log("API Response of query:", JSON.stringify(response.data)); 
             if(response.data.detail==="Failed to delete document"){
               setDeleteSuccess(false);
               setIsLoading(false);
@@ -170,8 +163,6 @@ const SearchResponse: React.FC = () => {
                   const newSet = new Set(prevSet);
                   newSet.add(idToDelete);
                   localStorage.setItem("deletedBookmarks", JSON.stringify(Array.from(newSet)));
-                  console.log("Adding ID to set:", idToDelete);
-                  console.log("New set after adding:", newSet);
                   return newSet;
                 });
               }
@@ -217,7 +208,6 @@ const SearchResponse: React.FC = () => {
         {selectedIndex === null
           ? Card.map((card, index) => {
             const isDeleted = DeletedBookmarks.has(card.ID);
-            console.log(`Card ${card.ID} isDeleted: ${isDeleted}`);
             
             return isDeleted ? 
               null : 

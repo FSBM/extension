@@ -27,11 +27,8 @@ export default function SearchPage({ Quote }: Props) {
         setIsLoading(true);
         chrome.runtime.sendMessage({ action: "search", query: query, cookies: localStorage.getItem("access_token") },
             (response) => {
-                console.log(response);
                 if (response) {
-                    console.log("API Response of query:", JSON.stringify(response.data));
                     if(response.data.detail==="Search failed: No documents found matching query"){
-                        console.log("No documents found matching query");
                         Navigate("/response", { state: { data: [] } });
                         return;
                         setIsLoading(false);
@@ -43,7 +40,6 @@ export default function SearchPage({ Quote }: Props) {
                         date: item.metadata.date,
                         ID: item.id
                     }));
-                    console.log("Response Array this given as: ", responseArray);
                     Navigate("/response", { state: { data: responseArray } });
                 }
 
@@ -60,9 +56,7 @@ export default function SearchPage({ Quote }: Props) {
         setIsLoading(true);
         chrome.runtime.sendMessage({ action: "searchAll", cookies: localStorage.getItem("access_token") },
             (response) => {
-                console.log(response);
                 if (response) {
-                    console.log("API Response of query:", JSON.stringify(response.data));
                     if(response.data.detail==="Search failed: No documents found matching query"){
                         console.log("No documents found matching query");
                         Navigate("/response", { state: { data: [] } });
@@ -77,7 +71,6 @@ export default function SearchPage({ Quote }: Props) {
                         date: item.date,
                         ID: item.id
                     }));
-                    console.log("Response Array this given as: ", responseArray);
                     Navigate("/response", { state: { data: responseArray } });
                 }
 
@@ -94,7 +87,6 @@ export default function SearchPage({ Quote }: Props) {
 
 
 
-    console.log(Quote);
     return (
         <>
             <div className="max-w-md bg-white rounded-lg px-10 w-[420px] h-[500px] flex flex-col  justify-between py-10 border border-black">
