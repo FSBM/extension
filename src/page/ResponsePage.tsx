@@ -89,7 +89,6 @@ export default function ResponsePage() {
 
     if (formData.link === "" || isValidURL(formData.link) || formData.title === "") {
       setnotSubmitted(true);
-      console.log(formData)
       if(isValidURL(formData.link)){
         setisError("Enter a valid link!")
       }
@@ -102,10 +101,8 @@ export default function ResponsePage() {
       setnotSubmitted(false);
 
       chrome.runtime.sendMessage({ action: "submit", data: formData, cookies: localStorage.getItem("access_token") }, (response) => {
-        console.log(response);
         if (response) {
           setIsLoading(false);
-          console.log("API Response:", response);
           setbgClr("--primary-green")
           setTitle("Successful !")
           setSubTxt("Your entry has been saved.")
@@ -141,7 +138,6 @@ export default function ResponsePage() {
             action: "closeExtension",
             target: "content"
           }, () => {
-            console.log("Exited the extension ");
           });
         }
       });

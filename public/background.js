@@ -17,7 +17,6 @@ chrome.action.onClicked.addListener((tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "searchAll") {
-      console.log("Showing all bookmarks")
       fetch(`https://hippocampus-backend.onrender.com/links/get`, {
         method: 'GET',
         headers: { 'access_token': message.cookies },
