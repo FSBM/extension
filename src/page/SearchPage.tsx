@@ -56,6 +56,40 @@ export default function SearchPage({ Quote }: Props) {
         )
 
     };
+    const handleSearchAll = () => {
+        setIsLoading(true);
+        chrome.runtime.sendMessage({ action: "searchAll", cookies: localStorage.getItem("access_token") },
+            (response) => {
+                console.log(response);
+                if (response) {
+                    console.log("API Response of query:", JSON.stringify(response.data));
+                    if(response.data.detail==="Search failed: No documents found matching query"){
+                        console.log("No documents found matching query");
+                        Navigate("/response", { state: { data: [] } });
+                        setIsLoading(false);
+                        return;
+                        
+                    }else{
+                    const responseArray = response.data.map((item: any) => ({
+                        title: item.title,
+                        url: item.source_url,
+                        content: item.note,
+                        date: item.date,
+                        ID: item.id
+                    }));
+                    console.log("Response Array this given as: ", responseArray);
+                    Navigate("/response", { state: { data: responseArray } });
+                }
+
+                    
+                } else {
+                    setIsLoading(false);
+                    console.error("API Error:", response.error);
+                }
+            }
+        )
+
+    };
 
 
 
@@ -74,7 +108,7 @@ export default function SearchPage({ Quote }: Props) {
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                if(query.length < 4){
+                                if(query.length < 3){
                                     setisError(true)
                                 }
                                 else{
@@ -93,17 +127,17 @@ export default function SearchPage({ Quote }: Props) {
                     ) :
                     <BiSearchAlt2 size={24} opacity={(query.length > 0) ? 1 : 0.4} onClick={(query.length > 3) ? handleSearch : undefined } />}
                 </div>
-                <div className={`nanum-myeongjo-regular text-4xl text-center ${isError?"text-red-900":"text-black"}`}>
+                <div className={`font-NanumMyeongjo  text-4xl text-center ${isError?"text-red-900":"text-black"}`}>
                     <motion.h1
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.5 }}
                         className="text-center"
-                    >"{isError?"The Query must be atleast 4 characters !":Quote}"</motion.h1>
+                    >"{isError?"The Query must be atleast 3 characters !":Quote}"</motion.h1>
                 </div>
                 <div className="w-[95%] mx-auto flex justify-between items-center">
                     <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />
-                    <Button text="SHOW ALL" handle={()=> Navigate("/response")} textColor="--primary-white" />  
+                    <Button text="SHOW ALL" handle={handleSearchAll} textColor="--primary-white" />  
                 </div>
             </div>
         </>

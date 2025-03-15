@@ -27,7 +27,7 @@ const PageWrapper = ({ children }: { children: ReactNode }) => (
     animate="animate"
     exit="exit"
     variants={pageVariants}
-    className="m-auto p-0 bg-transparent"
+    className="p-0 bg-transparent min-w-[100%]"
   >
     {children}
   </motion.div>
@@ -38,7 +38,8 @@ const PageWrapper = ({ children }: { children: ReactNode }) => (
 const AnimatedRoutes = () => {
   const Navigate = useNavigate();
   const location = useLocation();
-  const [quotes, setQuotes] = useState<string[]>([]);
+  const [quotes, setQuotes] = useState<string[]>([    
+  ]);
 
   function checkForCookie() {
     chrome.cookies.getAll({ url: "https://extension-auth.vercel.app" }, (cookies) => {
