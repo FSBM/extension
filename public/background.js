@@ -16,7 +16,6 @@ chrome.action.onClicked.addListener((tab) => {
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log("Message received in background script:", message);
     if (message.action === "searchAll") {
       console.log("Showing all bookmarks")
       fetch(`https://hippocampus-backend.onrender.com/links/get`, {
@@ -64,7 +63,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
       .then(response => response.json())
       .then(data => {
-        console.log("Submission successful:", data);
         sendResponse({ success: true, data });
       })
       .catch(error => {
@@ -85,7 +83,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return true;
     }
     else if(message.action === "delete"){
-      console.log(message.query);
       fetch(`https://hippocampus-backend.onrender.com/links/delete?doc_id=${message.query}`, {
         method: 'DELETE',
         headers: { 'access_token': message.cookies }
