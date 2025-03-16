@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const LoaderPillars = () => {
   return (
-    <div className="grid place-content-center bg-transparent h-[30px]">
+    <div className="grid place-content-center bg-transparent h-[30px] mt-1">
       <BarLoader />
     </div>
   );
@@ -33,13 +33,13 @@ const BarLoader = () => {
       }}
       initial="initial"
       animate="animate"
-      className="flex gap-1"
+      className="flex gap-[3px]"
     >
-      <motion.div variants={variants} className="h-12 w-2 bg-black" />
-      <motion.div variants={variants} className="h-12 w-2 bg-black" />
-      <motion.div variants={variants} className="h-12 w-2 bg-black" />
-      <motion.div variants={variants} className="h-12 w-2 bg-black" />
-      <motion.div variants={variants} className="h-12 w-2 bg-black" />
+      <motion.div variants={variants} className="h-4 w-1 bg-black" />
+      <motion.div variants={variants} className="h-4 w-1 bg-black" />
+      <motion.div variants={variants} className="h-4 w-1 bg-black" />
+      <motion.div variants={variants} className="h-4 w-1 bg-black" />
+      <motion.div variants={variants} className="h-4 w-1 bg-black" />
     </motion.div>
   );
 };

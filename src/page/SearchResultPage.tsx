@@ -3,7 +3,6 @@ import Cards from '../components/Cards';
 import Button from '../components/Button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../index.css';
-import { RiChatDeleteFill } from "react-icons/ri";
 import LoaderPillars from '../components/LoaderPillars';
 
 interface ProcessedResult {
@@ -68,7 +67,6 @@ const SearchResponse: React.FC = () => {
   const [DeleteSuccess, setDeleteSuccess] = useState<boolean>(true);
   const [DeletedBookmarks, setDeletedBookmarks] = useState(new Set());
   const allBookmarks: string[] = [];
-  console.log("These are the deleted Bookmarks:"+ JSON.stringify(DeletedBookmarks));
   useEffect(() => {
     if(localStorage.getItem("deletedBookmarks")){
       setDeletedBookmarks(new Set(JSON.parse(localStorage.getItem("deletedBookmarks") || "[]")));
@@ -114,7 +112,6 @@ const SearchResponse: React.FC = () => {
 
       if (responseData) {
         if(responseData.length===0){
-          console.log("No documents found matching query");
           return;
         }
         const newCards = responseData.map((item: any, index: number) => ({
@@ -148,15 +145,12 @@ const SearchResponse: React.FC = () => {
   const handleDelete = () => {
     setIsLoading(true);
     if (selectedIndex !== null) {
-      console.log("Delete Clicked AND PASSED ID:" + Card[selectedIndex].ID + " Bookmark : " + Card[selectedIndex].title);
     } else {
-      console.log("Delete Clicked AND PASSED ID: not passed Bookmark: not passed");
     }
-    chrome.runtime.sendMessage({ action: "delete", query:selectedIndex?Card[selectedIndex].ID:"" , cookies: localStorage.getItem("access_token") },
+    chrome.runtime.sendMessage({ action: "delete", query:(selectedIndex !== null ? Card[selectedIndex].ID : ""), cookies: localStorage.getItem("access_token") },
+    
     (response) => {
-        console.log(response);
         if (response) {
-            console.log("API Response of query:", JSON.stringify(response.data)); 
             if(response.data.detail==="Failed to delete document"){
               setDeleteSuccess(false);
               setIsLoading(false);
@@ -169,8 +163,6 @@ const SearchResponse: React.FC = () => {
                   const newSet = new Set(prevSet);
                   newSet.add(idToDelete);
                   localStorage.setItem("deletedBookmarks", JSON.stringify(Array.from(newSet)));
-                  console.log("Adding ID to set:", idToDelete);
-                  console.log("New set after adding:", newSet);
                   return newSet;
                 });
               }
@@ -205,8 +197,8 @@ const SearchResponse: React.FC = () => {
     style={{backgroundColor: responseData.length === 0 ? 'var(--primary-red)' : 'var(--primary-white)'}}
 
     className={`relative max-w-md  rounded-lg w-[420px] h-[500px] flex flex-col justify-center border border-black py-0 overflow-hidden`}>
-      {responseData.length === 0 ? (
-        <p className='text-center text-3xl black mb-3 pb-7 nyr-semibold'>Oops ! No results found</p>
+      {responseData.length === 0 || Card.filter(card => !DeletedBookmarks.has(card.ID)).length === 0 ? (
+        <p className='text-center text-2xl black mb-3 pb-7 nyr-semibold'>Oops ! No Bookmarks found</p>
       ):(<div className={` 
         
         ${selectedIndex === null
@@ -216,7 +208,6 @@ const SearchResponse: React.FC = () => {
         {selectedIndex === null
           ? Card.map((card, index) => {
             const isDeleted = DeletedBookmarks.has(card.ID);
-            console.log(`Card ${card.ID} isDeleted: ${isDeleted}`);
             
             return isDeleted ? 
               null : 
@@ -224,13 +215,16 @@ const SearchResponse: React.FC = () => {
                 key={index}
                 title={card.title}
                 description={(card.fullDescription.length > 10) ? 
-                  card.fullDescription.slice(0, 10) + "..." : 
+                  card.fullDescription.slice(0, 66) + "..." : 
                   card.fullDescription}
                 bgColor={card.bgColor}
                 onClick={() => setSelectedIndex(index)}
                 isSelected={false}
                 RedirectUrl={card.RedirectUrl}
                 date={card.date}
+                confirmDelete={confirmDelete}
+                setDeleteClicked={setDeleteClicked}
+
               />
           })
           : (
@@ -262,6 +256,8 @@ const SearchResponse: React.FC = () => {
             isSelected={true}
             RedirectUrl={Card[selectedIndex].RedirectUrl}
             date={Card[selectedIndex].date}
+            confirmDelete={confirmDelete}
+            setDeleteClicked={setDeleteClicked}
           />
           
           
@@ -285,17 +281,6 @@ const SearchResponse: React.FC = () => {
           }}
           textColor='--primary-white'
         />
-        {selectedIndex !== null?
-
-        <button 
-        disabled={confirmDelete}
-        className='bg-black rounded-full p-[8px]'>
-          <RiChatDeleteFill 
-          onClick={()=>setDeleteClicked(true)}
-          size={28} color='white'/>
-        </button>
-        
-        :null}
         <Button
           text={DeleteClicked?"YES":'HOME'}
           handle={() => {

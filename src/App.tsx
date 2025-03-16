@@ -27,7 +27,7 @@ const PageWrapper = ({ children }: { children: ReactNode }) => (
     animate="animate"
     exit="exit"
     variants={pageVariants}
-    className="m-auto p-0 bg-transparent"
+    className="p-0 bg-transparent min-w-[100%]"
   >
     {children}
   </motion.div>
@@ -38,7 +38,8 @@ const PageWrapper = ({ children }: { children: ReactNode }) => (
 const AnimatedRoutes = () => {
   const Navigate = useNavigate();
   const location = useLocation();
-  const [quotes, setQuotes] = useState<string[]>([]);
+  const [quotes, setQuotes] = useState<string[]>([    
+  ]);
 
   function checkForCookie() {
     chrome.cookies.getAll({ url: "https://extension-auth.vercel.app" }, (cookies) => {
@@ -78,7 +79,6 @@ const AnimatedRoutes = () => {
             domain: new URL(import.meta.env.VITE_API_URL).hostname
           });
 
-          console.log("Cookie successfully set for domain:", new URL(import.meta.env.VITE_API_URL).hostname);
           await chrome.cookies.set({
             url: tab.url,
             name: 'access_token',
@@ -96,8 +96,6 @@ const AnimatedRoutes = () => {
           if (cookie && location.pathname === "/") {
             Navigate("/submit");
 
-            console.log("the cookie is set in state and the value is", cookie.value);
-            console.log("Cookie successfully set for domain:", url.hostname);
 
           }
         }
@@ -117,7 +115,6 @@ const AnimatedRoutes = () => {
         },
         (response) => {
           if (response.success) {
-            console.log("API Response:", response.data);
 
             if (response.data) {
               const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
@@ -128,9 +125,7 @@ const AnimatedRoutes = () => {
               localStorage.setItem("quotes", JSON.stringify(filteredQuotes));
             }
 
-            console.log("Quotes update triggered");
           } else {
-            console.error("API Error:", response.error);
           }
         }
       );}

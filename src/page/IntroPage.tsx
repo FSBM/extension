@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Intro = () => {
     const Navigate = useNavigate();
     const handleAuth = async () => {
-      console.log("handleAuth Clicked");
       chrome.cookies.get({
           url: 'https://extension-auth.vercel.app',
           name: 'access_token',
@@ -15,9 +14,7 @@ const Intro = () => {
           if (cookie) {
               localStorage.setItem('access_token', cookie.value);
               Navigate("/submit");
-              console.log("Got the access_token: "+ cookie.value);
           } else {
-              console.log("No access_token found");
               window.open("https://extension-auth.vercel.app");
           }
       });
