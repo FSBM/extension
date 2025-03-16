@@ -12,7 +12,7 @@ interface FormData {
 export default function ResponsePage() {
 
   const [title, setTitle] = useState("Good Morning");
-  const [subTxt, setSubTxt] = useState("Welcome User...");
+  const [subTxt, setSubTxt] = useState("User");
   const [leftBtnTxt, setLftBtnTxt] = useState("CLEAR");
   const [BtnTxtClr, setBtnTxtClr] = useState("--primary-yellow");
   const [rightBtnTxt, setRtBtnTxt] = useState("SUBMIT");
@@ -26,13 +26,16 @@ export default function ResponsePage() {
   const [DoneNumber, setDoneNumber] = useState(0);
 
   function isValidURL(url:string) {
-    const simplePattern = /^(https?:\/\/)(.+)(\.[a-z]{2,})$/i;
+   const simplePattern = /^(https?:\/\/)?[\w.-]+\.[a-z]{2,6}$/i;
     return simplePattern.test(url);
   }
 
 
   useEffect(() => {
-    if( new Date().getHours() < 12){
+    if(new Date().getHours()<5){
+      setTitle("Go & Sleep,");
+    }
+    else if( new Date().getHours() < 12){
       setTitle("Good Morning,")
     }else if(new Date().getHours() < 17){
       setTitle("Good Afternoon,")
@@ -46,8 +49,7 @@ export default function ResponsePage() {
   useEffect(() => {
        chrome.cookies.get({url:'https://hippocampus-backend.onrender.com',name:'user_name'},(cookie)=>{
         if(cookie){
-         
-            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}...`)
+            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}`)
       }
     });
   }, []);
@@ -85,7 +87,7 @@ export default function ResponsePage() {
     e.preventDefault();
 
 
-    if (formData.link == "" || isValidURL(formData.link) || formData.title == "") {
+    if (formData.link === "" || isValidURL(formData.link) || formData.title === "") {
       setnotSubmitted(true);
       if(isValidURL(formData.link)){
         setisError("Enter a valid link!")
@@ -99,10 +101,8 @@ export default function ResponsePage() {
       setnotSubmitted(false);
 
       chrome.runtime.sendMessage({ action: "submit", data: formData, cookies: localStorage.getItem("access_token") }, (response) => {
-        console.log(response);
         if (response) {
           setIsLoading(false);
-          console.log("API Response:", response);
           setbgClr("--primary-green")
           setTitle("Successful !")
           setSubTxt("Your entry has been saved.")
@@ -138,7 +138,6 @@ export default function ResponsePage() {
             action: "closeExtension",
             target: "content"
           }, () => {
-            console.log("Exited the extension ");
           });
         }
       });
@@ -150,8 +149,6 @@ export default function ResponsePage() {
         note: ''
       });
       setbgClr("--primary-yellow")
-      setTitle("Good Morning")
-      setSubTxt("Welcome User...")
       setLftBtnTxt("CLEAR")
       setBtnTxtClr("--primary-yellow")
       setRtBtnTxt("SUBMIT")
@@ -172,8 +169,8 @@ export default function ResponsePage() {
 
         <div className="flex justify-between items-center mb-6 gap-2 ">
           <div className='flex flex-col justify-end pl-1 -gap-2'>
-            <h1 className="text-[28px] nanum-myeongjo-regular pr-2">{title}</h1>
-            <p className="text-base text-black Georgia mt-[-8px]  pl-1">{subTxt}</p>
+            <h1 className="text-[18px] font-NanumMyeongjo pr-2">{title}</h1>
+            <p className={`${(subTxt==="Your entry has been saved." || subTxt==="Something went wrong")?'text-[24px]':'text-[30px]'} text-black font-NanumMyeongjo mt-[-8px]`}>{subTxt}</p>
           </div>
           {notSubmitted ?
             <div

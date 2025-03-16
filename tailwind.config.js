@@ -12,6 +12,7 @@ export default {
         SansMono700:['Sans-Mono-700','sans-serif'],
         SansText400:['Sans-Text-400','sans-serif'],
         SansText700:['Sans-Text-700','sans-serif'],
+        NanumMyeongjo:['Nanum Myeongjo','sans-serif'],
       },
       colors: {
         // Greens

@@ -2,6 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
 @import url('https://fonts.cdnfonts.com/css/georgia');
+@import url('https://fonts.cdnfonts.com/css/vollkorn');
+@import url('https://fonts.googleapis.com/css2?family=Gilda+Display&family=Oswald:wght@200..700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +13,7 @@
   --primary-red: #ff4c4c;
   --primary-blue: #76ADFF;
   --primary-green: #DAEF68;
-  --primary-yellow:  #fff900;
+  --primary-yellow:  #FFCE00;
   --primary-orange: #FF8E59;
   --primary-white: #FFFFFF;
   --soft-blue: #A3C8FF;
@@ -53,6 +55,9 @@ body ::placeholder{
   src: url('./assets/Google Sans Mono-normal-300-100.ttf');
 
 }
+
+
+
 @font-face {
   font-family: 'Sans-Mono-500';
   src: url('./assets/Google Sans Mono-normal-500-100.ttf');
@@ -70,15 +75,21 @@ body ::placeholder{
   src: url('./assets/Google Sans Text-normal-700-100.ttf');
   
 }
+@font-face {
+  font-family: 'Nanum Myeongjo';
+  src: url('./assets/NanumMyeongjo-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
 
 
 .nanum-myeongjo-regular {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Gilda Display", serif;
   font-weight: 400;
   font-style: normal;
 }
 .nyr {
-  font-family: "Nanum Myeongjo", serif;
+  font-family: "Gilda Display", serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -154,5 +165,6 @@ body ::placeholder{
 
 textarea{
   resize: none;
+  margin: 0px !important;
 }
 
