@@ -1,6 +1,5 @@
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("Message received in content script:", message);
   if (message.action === "closeExtension" && message.target === "content") {
     const sidebar = document.getElementById("my-extension-sidebar");
     if (sidebar) {

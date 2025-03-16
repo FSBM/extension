@@ -46,7 +46,6 @@ export default function SubmitPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
     Navigate("/success")
   };
 
@@ -64,7 +63,7 @@ export default function SubmitPage() {
       border border-black">
         <div className="flex justify-between items-center mb-6 gap-2 ">
           <div className='flex flex-col justify-end pl-1 -gap-2'>
-            <h1 className="text-3xl nanum-myeongjo-regular pr-2">Good Morning</h1>
+            <h1 className="text-3xl font-NanumMyeongjo  pr-2">Good Morning</h1>
             <p className="text-sm text-black font-SansText400 mt-[-5px] ml-1"> Welcome abroad</p>
           </div>
           <div className="relative flex items-center cursor-pointer  border-black border-[1.5px] rounded-full bg-yellow-400 px-2 py-2" onClick={

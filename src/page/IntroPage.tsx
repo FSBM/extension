@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Intro = () => {
     const Navigate = useNavigate();
     const handleAuth = async () => {
-      console.log("handleAuth Clicked");
       chrome.cookies.get({
           url: 'https://extension-auth.vercel.app',
           name: 'access_token',
@@ -15,16 +14,14 @@ const Intro = () => {
           if (cookie) {
               localStorage.setItem('access_token', cookie.value);
               Navigate("/submit");
-              console.log("Got the access_token: "+ cookie.value);
           } else {
-              console.log("No access_token found");
               window.open("https://extension-auth.vercel.app");
           }
       });
   }
 
   return (
-    <div className="h-[500px] w-[415px] relative border border-black rounded-lg overflow-hidden">
+    <div className="h-[500px]  relative border border-black rounded-lg overflow-hidden w-full">
       
       <div className="absolute inset-0 flex">
         <div className="w-1/4 bg-[var(--primary-orange)]" />
