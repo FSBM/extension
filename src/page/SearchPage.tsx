@@ -38,7 +38,7 @@ export default function SearchPage({ Quote }: Props) {
                         url: item.metadata.source_url,
                         content: item.metadata.note,
                         date: item.metadata.date,
-                        ID: item.id
+                        ID: item.metadata.doc_id
                     }));
                     Navigate("/response", { state: { data: responseArray } });
                 }
@@ -69,7 +69,7 @@ export default function SearchPage({ Quote }: Props) {
                         url: item.source_url,
                         content: item.note,
                         date: item.date,
-                        ID: item.id
+                        ID: item.doc_id
                     }));
                     Navigate("/response", { state: { data: responseArray } });
                 }
@@ -128,7 +128,8 @@ export default function SearchPage({ Quote }: Props) {
                     >"{isError?"The Query must be atleast 3 characters !":Quote}"</motion.h1>
                 </div>
                 <div className="w-[95%] mx-auto flex justify-between items-center">
-                    <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" />
+                    <Button text="HOME" handle={() => Navigate("/submit")} textColor="--primary-white" 
+                        IncMinWidth="118px"/>
                     <Button text="SHOW ALL" handle={handleSearchAll} textColor="--primary-white" />  
                 </div>
             </div>

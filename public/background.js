@@ -33,7 +33,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   
     if (message.action === "search") {
-      fetch(`https://hippocampus-backend.onrender.com/links/search?query=${message.query}`, {
+      fetch(`https://hippocampus-backend.onrender.com/links/search?query=${message.query}`
+        , {
         method: 'GET',
         headers: { 'access_token': message.cookies },
         'access_token': message.cookies,
@@ -82,7 +83,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return true;
     }
     else if(message.action === "delete"){
-      fetch(`https://hippocampus-backend.onrender.com/links/delete?doc_id=${message.query}`, {
+      fetch(`https://hippocampus-backend.onrender.com/links/delete?doc_id_pincone=${message.query}`, {
         method: 'DELETE',
         headers: { 'access_token': message.cookies }
       })
