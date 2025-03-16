@@ -21,7 +21,7 @@ const Intro = () => {
   }
 
   return (
-    <div className="h-[500px]  relative border border-black rounded-lg overflow-hidden w-full">
+    <div className="h-[500px] w-[100%] relative border border-black rounded-lg overflow-hidden">
       
       <div className="absolute inset-0 flex">
         <div className="w-1/4 bg-[var(--primary-orange)]" />
