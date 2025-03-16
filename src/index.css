@@ -165,5 +165,6 @@ body ::placeholder{
 
 textarea{
   resize: none;
+  margin: 0px !important;
 }
 

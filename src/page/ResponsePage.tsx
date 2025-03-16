@@ -12,7 +12,7 @@ interface FormData {
 export default function ResponsePage() {
 
   const [title, setTitle] = useState("Good Morning");
-  const [subTxt, setSubTxt] = useState("User...");
+  const [subTxt, setSubTxt] = useState("User");
   const [leftBtnTxt, setLftBtnTxt] = useState("CLEAR");
   const [BtnTxtClr, setBtnTxtClr] = useState("--primary-yellow");
   const [rightBtnTxt, setRtBtnTxt] = useState("SUBMIT");
@@ -33,7 +33,7 @@ export default function ResponsePage() {
 
   useEffect(() => {
     if(new Date().getHours()<5){
-      setTitle("Go and sleep,");
+      setTitle("Go & Sleep,");
     }
     else if( new Date().getHours() < 12){
       setTitle("Good Morning,")
@@ -49,7 +49,7 @@ export default function ResponsePage() {
   useEffect(() => {
        chrome.cookies.get({url:'https://hippocampus-backend.onrender.com',name:'user_name'},(cookie)=>{
         if(cookie){
-            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}...`)
+            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}`)
       }
     });
   }, []);
@@ -169,8 +169,8 @@ export default function ResponsePage() {
 
         <div className="flex justify-between items-center mb-6 gap-2 ">
           <div className='flex flex-col justify-end pl-1 -gap-2'>
-            <h1 className="text-[28px] font-NanumMyeongjo pr-2">{title}</h1>
-            <p className="text-base text-black Georgia mt-[-8px]  pl-1">{subTxt}</p>
+            <h1 className="text-[18px] font-NanumMyeongjo pr-2">{title}</h1>
+            <p className={`${(subTxt==="Your entry has been saved." || subTxt==="Something went wrong")?'text-[24px]':'text-[30px]'} text-black font-NanumMyeongjo mt-[-8px]`}>{subTxt}</p>
           </div>
           {notSubmitted ?
             <div
