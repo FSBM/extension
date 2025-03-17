@@ -96,7 +96,7 @@ export default function SearchPage({ Quote }: Props) {
                     <input
                         ref = {inputRef}
                         type="text"
-                        placeholder="SEARCH"
+                        placeholder="SEARCH AND PRESS ENTER" 
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => {
