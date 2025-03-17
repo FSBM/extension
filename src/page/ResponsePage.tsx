@@ -49,7 +49,7 @@ export default function ResponsePage() {
   useEffect(() => {
        chrome.cookies.get({url:'https://hippocampus-backend.onrender.com',name:'user_name'},(cookie)=>{
         if(cookie){
-            setSubTxt(`${cookie.value.split(" ")[0].split(`"`)[1]}`)
+          setSubTxt(cookie.value.replace(/"/g, ''));
       }
     });
   }, []);

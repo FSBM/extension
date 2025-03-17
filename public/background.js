@@ -21,9 +21,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         method: 'GET',
         headers: { 'access_token': message.cookies },
         'access_token': message.cookies,
-        'user_id': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_id' }),
-        'user_name': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_name' }),
-        'user_profile': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_profile' })
       })
       .then(response => response.json())
       .then(data => sendResponse({ success: true, data }))
@@ -38,9 +35,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         method: 'GET',
         headers: { 'access_token': message.cookies },
         'access_token': message.cookies,
-        'user_id': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_id' }),
-        'user_name': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_name' }),
-        'user_profile': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_profile' })
       })
       .then(response => response.json())
       .then(data => sendResponse({ success: true, data }))
@@ -49,14 +43,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     else if (message.action === "submit") {
+      console.log("message got to submit :", message.data)
+      console.log("message cookie:", message.cookies)
       fetch('https://hippocampus-backend.onrender.com/links/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'access_token': message.cookies,
-          'user_id': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_id' }),
-          'user_name': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_name' }),
-          'user_profile': chrome.cookies.get({ url: 'https://hippocampus-backend.onrender.com', name: 'user_profile' })
 
         },
         body: JSON.stringify(message.data)

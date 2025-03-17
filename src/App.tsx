@@ -66,7 +66,6 @@ const AnimatedRoutes = () => {
 
 
       try {
-        const url = new URL(tab.url);
         const accessToken = localStorage.getItem("access_token");
 
 
@@ -80,17 +79,44 @@ const AnimatedRoutes = () => {
           });
 
           await chrome.cookies.set({
-            url: tab.url,
+            url: 'https://hippocampus-backend.onrender.com',
             name: 'access_token',
             value: accessToken,
             path: '/',
-            domain: url.hostname
+            domain: 'hippocampus-backend.onrender.com'
           });
 
           const cookie = await chrome.cookies.get({
             url: tab.url,
             name: 'access_token',
           });
+          if(localStorage.getItem("quotes")){
+            console.log("found Quotes")
+            setQuotes(JSON.parse(localStorage.getItem("quotes") || "[]"));
+            console.log("have set the quotes")
+          }else{chrome.runtime.sendMessage(
+            {
+              cookies: localStorage.getItem("access_token"),
+              action: "getQuotes"
+            },
+            (response) => {
+              if (response.success) {
+    
+                if (response.data) {
+                  const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
+                  setQuotes(prev => [
+                    ...new Set([...prev, ...filteredQuotes])
+                    
+                  ]);
+                  console.log("GOT QUOTES FROM BAKCEND")
+                  localStorage.setItem("quotes", JSON.stringify(filteredQuotes));
+                  console.log("Quotes are set")
+                }
+    
+              } else {
+              }
+            }
+          );}
 
 
           if (cookie && location.pathname === "/") {
@@ -105,30 +131,7 @@ const AnimatedRoutes = () => {
       }
 
 
-      if(localStorage.getItem("quotes")){
-        setQuotes(JSON.parse(localStorage.getItem("quotes") || "[]"));
-        
-      }else{chrome.runtime.sendMessage(
-        {
-          cookies: localStorage.getItem("access_token"),
-          action: "getQuotes"
-        },
-        (response) => {
-          if (response.success) {
-
-            if (response.data) {
-              const filteredQuotes = response.data.filter((quote: string) => quote.length > 0);
-              setQuotes(prev => [
-                ...new Set([...prev, ...filteredQuotes])
-                
-              ]);
-              localStorage.setItem("quotes", JSON.stringify(filteredQuotes));
-            }
-
-          } else {
-          }
-        }
-      );}
+      
       
     };
 
