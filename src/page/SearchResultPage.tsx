@@ -151,7 +151,10 @@ const SearchResponse: React.FC = () => {
     
     (response) => {
         if (response) {
-            
+            if(response.data.detail==="Failed to delete document"){
+              setDeleteSuccess(false);
+              setIsLoading(false);
+            }else{
               setCards(prevCards => prevCards.filter((_, index) => index !== selectedIndex));
 
               if (selectedIndex !== null && Card[selectedIndex]) {
@@ -162,12 +165,13 @@ const SearchResponse: React.FC = () => {
                   localStorage.setItem("deletedBookmarks", JSON.stringify(Array.from(newSet)));
                   return newSet;
                 });
-              
+              }
 
              
               if (selectedIndex !== null) {
                 console.log("Now deleted the bookmark :", Card[selectedIndex]);
               }
+              console.log("Deleted Bookmarks: ", DeletedBookmarks);
               setDeleteSuccess(true);
               setIsLoading(false);
             }
