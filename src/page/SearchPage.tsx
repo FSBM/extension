@@ -28,7 +28,11 @@ export default function SearchPage({ Quote }: Props) {
         chrome.runtime.sendMessage({ action: "search", query: query, cookies: localStorage.getItem("access_token") },
             (response) => {
                 if (response) {
-                    
+                    if(response.data.detail==="Search failed: No documents found matching query"){
+                        Navigate("/response", { state: { data: [] } });
+                        return;
+                        setIsLoading(false);
+                    }else{
                     const responseArray = response.data.map((item: any) => ({
                         title: item.metadata.title,
                         url: item.metadata.source_url,
@@ -37,7 +41,7 @@ export default function SearchPage({ Quote }: Props) {
                         ID: item.metadata.doc_id
                     }));
                     Navigate("/response", { state: { data: responseArray } });
-                
+                }
 
                     
                 } else {
@@ -53,7 +57,14 @@ export default function SearchPage({ Quote }: Props) {
         chrome.runtime.sendMessage({ action: "searchAll", cookies: localStorage.getItem("access_token") },
             (response) => {
                 if (response) {
-                    
+                    console.log(response)
+                    if(response.data.detail==="Search failed: No documents found matching query"){
+                        console.log("No documents found matching query");
+                        Navigate("/response", { state: { data: [] } });
+                        setIsLoading(false);
+                        return;
+                        
+                    }else{
                     const responseArray = response.data.map((item: any) => ({
                         title: item.title,
                         url: item.source_url,
@@ -62,8 +73,9 @@ export default function SearchPage({ Quote }: Props) {
                         ID: item.doc_id
                     }));
                     Navigate("/response", { state: { data: responseArray } });
-                
-                 
+                }
+
+                    
                 } else {
                     setIsLoading(false);
                     console.error("API Error:", response.error);

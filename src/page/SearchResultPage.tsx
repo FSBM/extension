@@ -151,7 +151,7 @@ const SearchResponse: React.FC = () => {
     
     (response) => {
         if (response) {
-            if(response.data.detail==="Failed to delete document"){
+            if(response.detail==="Failed to delete document"){
               setDeleteSuccess(false);
               setIsLoading(false);
             }else{
