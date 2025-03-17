@@ -110,7 +110,7 @@ export default function SearchPage({ Quote }: Props) {
                             }
                         }}
                         className="bg-transparent focus:outline-none text-black placeholder:text-[11px] placeholder:text-black w-[80%]
-                            font-SansText400 pb-[2px] placeholder:tracking-widest
+                            font-SansText400 pb-[1px] placeholder:tracking-widest
                             placeholdder-opacity-25"
                     />
 
