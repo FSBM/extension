@@ -43,8 +43,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     else if (message.action === "submit") {
-      console.log("message got to submit :", message.data)
-      console.log("message cookie:", message.cookies)
       fetch('https://hippocampus-backend.onrender.com/links/save', {
         method: 'POST',
         headers: {

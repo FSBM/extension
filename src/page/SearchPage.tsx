@@ -57,7 +57,6 @@ export default function SearchPage({ Quote }: Props) {
         chrome.runtime.sendMessage({ action: "searchAll", cookies: localStorage.getItem("access_token") },
             (response) => {
                 if (response) {
-                    console.log(response)
                     if(response.data.detail==="Search failed: No documents found matching query"){
                         console.log("No documents found matching query");
                         Navigate("/response", { state: { data: [] } });
